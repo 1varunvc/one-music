@@ -9,7 +9,7 @@ app.use(express.static("public"));
 
 app.set('view engine', 'ejs');
 
-var videoId0 = "";
+var ytVideoIdAppJs00 = "";
 var result = "";
 
 app.get("/", function(req, res) {

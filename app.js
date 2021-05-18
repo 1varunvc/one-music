@@ -9,9 +9,11 @@ const bodyParser = require("body-parser");
 const app = express();
 
 // 'urlencoded' helps access html data. Other data formats could JSON etc.
+// body-parser required as to exclusively define "extended: true" although this is no use to us.
 app.use(bodyParser.urlencoded({extended: true}));
 
-// This sets a static directory to look from image sources, css or js link files, when they are mentioned in html or ejs files.
+// This sets a static directory to look for source files like css, js, img. These file links are mentioned in html or ejs files.
+// A folder named 'public' has to be in the same directory as "app.js". The source files are stored here.
 app.use(express.static("public"));
 
 // ejs view engine has been used to use app.js variables into the output ejs file.
@@ -37,22 +39,23 @@ app.post("/", function(req, res) {
   // Using https package to fetch data (response) from the 'url'. Using arrow function notation.
   https.get(url, (response) => {
     // The fetched data (in HEX) wasn't able to be parsed into JSON. It was giving the error, "SyntaxError: Unexpected end of JSON input"
-    // That is why we need to hold onto all the chunks of data recieved 'until' the response has ended. Refer https://stackoverflow.com/a/43791288/14597561
+    // We need to hold onto all the chunks of data recieved 'until' the response has ended. Refer answer https://stackoverflow.com/a/43791288/14597561 available on the page https://stackoverflow.com/questions/43782549/why-can-i-not-parse-the-json-from-youtube-data-api-in-node-js
     const chunks = []
     response.on('data', (d) => {
       chunks.push(d)
     })
 
-    // The response is parsed to JSON. And stored in variable 'result'.
+    // The response (chunks created) is parsed to JSON. And stored in variable 'result'.
     response.on('end', () => {
       var result = JSON.parse((Buffer.concat(chunks).toString()))
       console.log(result)
 
-      //Extraced required data from 'result'. The following "items[0].id.videoId" is the address of the data that we need from the JSON 'result'.
+      //Extracting required data from 'result'. The following "items[0].id.videoId" is the address of the data that we need from the JSON 'result'.
       var ytVideoIdAppJs00 = result.items[0].id.videoId;
       console.log("Fetched value: " + ytVideoIdAppJs00);
 
       // The 'results' named EJS file is rendered and fed in response. The 'required' data is passed into it using the following variable(s).
+      // A folder named 'views' has to be in the same directory as "app.js". That folder contains 'results.ejs'.
       res.render("results", {
         ytVideoIdEjs00: ytVideoIdAppJs00
       });

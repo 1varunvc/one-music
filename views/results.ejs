@@ -8,6 +8,8 @@
 </head>
 
 <body>
+<!-- Essentially, our aim is to replace the source for iframes with that of the data using API calls.-->
+
   <!-- YouTube Video iFrame -->
     <iframe id="yt_iframe_00" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -30,7 +32,7 @@
         // Youtube Video
           $("#yt_iframe_00").attr("src","https://www.youtube.com/embed/"  + "<%= ytVideoIdEjs00 %>");
 
-        // Uncomment the following when required data has been fetched from the API
+        // Uncomment the following when required data has been fetched from the API call.
         // // Spotify Track
         //   $("#spotify_track_iframe_00").attr("src", "https://open.spotify.com/embed/track/" + "<%= spotifyTrackIdEjs00 %>");
         //

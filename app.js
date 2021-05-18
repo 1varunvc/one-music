@@ -18,7 +18,7 @@ app.get("/", function(req, res) {
 
 app.post("/", function(req, res) {
   const query = req.body.queryValue;
-  const apiKey = "{API_KEY}"
+  const apiKey = "AIzaSyC5asO20CAohIW_wEkgJB0XHVH4bOZSN5U"
   const url = "https://www.googleapis.com/youtube/v3/search?key=" + apiKey + "&part=snippet&q=" + query + "&maxResults=1&order=relevance&type=video";
 
   https.get(url, (response) => {
@@ -32,14 +32,13 @@ app.post("/", function(req, res) {
       console.log(result)
 
 
-      var videoId0 = result.items[0].id.videoId;
-      console.log("Fetched value: " + videoId0);
+      var ytVideoIdAppJs00 = result.items[0].id.videoId;
+      console.log("Fetched value: " + ytVideoIdAppJs00);
 
       res.render("results", {
-        iFrameVideoId0: videoId0
+        ytVideoIdEjs00: ytVideoIdAppJs00
       });
-      console.log("Rendered value to be sent: " + videoId0);
-
+      console.log("Value to be used in rendered file: " + ytVideoId00);
     });
   });
 });

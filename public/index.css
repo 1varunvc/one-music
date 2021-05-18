@@ -1,1 +1,8 @@
+.index-search-container {
+  display: grid;
+  place-items: center;
+}
 
+body {
+  background-color: black;
+}

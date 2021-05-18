@@ -3,16 +3,44 @@
 
 <head>
   <meta charset="utf-8">
-  <title>iFrame</title>
+  <title>One Music</title>
+  <link rel="stylesheet" href="../results.css">
 </head>
 
 <body>
-  <iframe id="ytIframe00" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <!-- YouTube Video iFrame -->
+    <iframe id="yt_iframe_00" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script type="text/javascript">
-    $("#ytIframe00").attr("src", "https://www.youtube.com/embed/" + "<%= iFrameVideoId0 %>");
+  <!-- Spotify Track iFrame -->
+    <iframe id="spotify_track_iframe_00" src="" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+  <!-- Spotify Album iFrame -->
+    <iframe id="spotify_album_iframe_00" src="" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+  <!-- Spotify Artist iFrame -->
+    <iframe id="spotify_track_iframe_00" src="" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+  <!-- JavaScript: -->
+    <!-- jQuery Link -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Replacing the src for iFrame: -->
+      <script type="text/javascript">
+
+        // Youtube Video
+          $("#yt_iframe_00").attr("src","https://www.youtube.com/embed/"  + "<%= ytVideoIdEjs00 %>");
+
+        // Uncomment the following when required data has been fetched from the API
+        // // Spotify Track
+        //   $("#spotify_track_iframe_00").attr("src", "https://open.spotify.com/embed/track/" + "<%= spotifyTrackIdEjs00 %>");
+        //
+        // // Spotify Album
+        //   $("#spotify_album_iframe_00").attr("src", "https://open.spotify.com/embed/album/" + "<%= spotifyAlbumIdEjs00 %>");
+        //
+        // //Spotify Artist
+        //   $("#spotify_track_iframe_00").attr("src", "https://open.spotify.com/embed/artist/" + "<%= spotifyArtistIdEjs00 %>");
+
   </script>
-</body>
 
+</body>
 </html>

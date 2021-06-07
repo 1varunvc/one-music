@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>One Music</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body onload="onPageLoad()">
+
+      <a href="/"><h2>One Music</h2></a>
+
+    <div class="index-search-container">
+
+      <!-- POST request to fetch data related to queryValue.  -->
+      <form class="" action="/" method="post">
+        <input id="queryId" type="text" name="queryValue" value="" placeholder="search">
+        <button type="submit" name="button">HIT ME</button>
+      </form>
+
+    </div>
+
+    <br>
+
+    <% if(userEjs) { %>
+      <div class="">
+        <a href="auth/logout"><button type="button" name="button">Logout</button></a>
+      </div>
+    <% } else { %>
+      <div class="">
+        <a href="auth/spotify"><button type="button" name="button">Login (via Spotify)</button></a>
+      </div>
+    <% } %>
+
+  </body>
+</html>

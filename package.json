@@ -1,7 +1,7 @@
 {
-  "name": "one-music-test",
+  "name": "one-music",
   "version": "1.0.0",
-  "description": "",
+  "description": "One-stop music search and play.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,9 +9,13 @@
   "author": "Varun Chawla",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
+    "cookie-session": "^1.4.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
-    "multer": "^1.4.2"
+    "mongoose": "^5.12.13",
+    "passport": "^0.4.1",
+    "passport-spotify": "^2.0.0"
   }
 }

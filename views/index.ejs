@@ -1,35 +1,68 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>One Music</title>
-    <link rel="stylesheet" href="index.css">
-  </head>
-  <body onload="onPageLoad()">
 
-      <a href="/"><h2>One Music</h2></a>
+<head>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+  <title>One Music</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap&family=Roboto+Slab:wght@400" rel="stylesheet">
+  <link rel="stylesheet" href="styles/index.css">
+  <link rel="icon" href="img/logo/one_music-short-4.0.svg" type="image/svg+xml">
+</head>
 
-    <div class="index-search-container">
+<body onload="onPageLoad()">
 
-      <!-- POST request to fetch data related to queryValue.  -->
-      <form class="" action="/" method="post">
-        <input id="queryId" type="text" name="queryValue" value="" placeholder="search">
-        <button type="submit" name="button">HIT ME</button>
-      </form>
+  <section class="logoSearchLogin">
 
-    </div>
+    <header>
+      <a class="logo" id="header" href="/"><img class="logoImg" src="img/logo/one_music-short-2.3.3-long-2.0-loop_count-1.gif" alt="One Music"></a>
+    </header>
 
-    <br>
-
-    <% if(userEjs) { %>
-      <div class="">
-        <a href="auth/logout"><button type="button" name="button">Logout</button></a>
+    <!-- POST request to fetch data related to queryValue.  -->
+    <form class="searchForm" action="/" method="post">
+      <div class="searchInputContainer">
+        <input class="searchInput" id="queryId" type="search" name="queryValue" placeholder="Search" autocomplete="off" required>
+        <button class="searchButton" type="submit" name="button">
+          &#5125;&#xFE0E;
+        </button>
       </div>
+    </form>
+
+    <% if(user) { %>
+      </section>
+
+      <a class="logout" href="auth/logout">Logout</a>
     <% } else { %>
-      <div class="">
-        <a href="auth/spotify"><button type="button" name="button">Login (via Spotify)</button></a>
-      </div>
+        <section class="login">
+          <button class="loginButton" style="--content: 'Login with Spotify';" onclick="location.href='auth/spotify';">
+            <div class="left"></div>
+            Login with Spotify
+            <!-- The padding of the button, is made around 'this' text.  -->
+            <div class="right"></div>
+          </button>
+        </section>
+
+      </section>
     <% } %>
 
-  </body>
+    <section class="downloads">
+      <!-- <img class="pwa" src="img/app-store/pwa.png" alt="pwa_badge"> -->
+      <img class="googlePlay" src="img/app-store/google_play.png" alt="google_play_badge">
+      <img class="appStore" src="./img/app-store/app_store.svg" alt="app_store_badge">
+    </section>
+
+  <!-- <script type="text/javascript">
+
+  if(window.outerWidth > 767) {
+    document.getElementById("header").innerHTML = `
+    <video autoplay='autoplay'>
+      <source class='logoImg' src='vid/one_music-short-2.3.3-long-2.0.mp4' type='video/mp4' />
+    </video>
+    `;
+  }
+
+  </script> -->
+
+</body>
+
 </html>

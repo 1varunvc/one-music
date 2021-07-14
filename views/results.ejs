@@ -2,131 +2,342 @@
 <html lang="en" dir="ltr">
 
 <head>
-  <meta charset="utf-8">
+  <meta http-equiv="content-type" name="viewport" charset="utf-8" content="text/html; width=device-width, initial-scale=1">
   <title>One Music</title>
-  <link rel="stylesheet" href="../results.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles/results.css">
+  <link rel="icon" href="img/logo/one_music-short-4.0.svg" type="image/svg+xml">
 </head>
 
-<body>
+<body onload>
 
-  <div class="">
-    <a href="/"><h2>One Music</h2></a>
-  </div>
+  <section class="bodyContainer">
 
-  <div class="index-search-container">
+    <a href="/"><img class="logo" src="./img/logo/one_music-short-4.0.svg" alt="One Music"></a>
 
     <!-- POST request to fetch data related to queryValue.  -->
-    <form class="" action="/" method="post">
-      <input id="queryId" type="text" name="queryValue" value="" placeholder="search">
-      <button type="submit" name="button">HIT ME</button>
+    <form class="searchForm" action="/" method="post">
+      <div class="searchInputContainer">
+        <input class="searchInput" id="queryId" type="search" name="queryValue" placeholder="Search" autocomplete="off" value="<%= query %>" required>
+        <button class="searchButton" type="submit" name="button">
+          &#5125;&#xFE0E;
+        </button>
+      </div>
     </form>
 
-  </div>
+    <!-- Based upon whether the user exists, following if-else statement proceeds. -->
+    <% if (!user) { %>
 
-  <br>
+      <section class="contentContainer">
 
-  <!-- Based upon whether the user exists, following if-else statement proceeds. -->
-  <% if(userEjs) { %>
+      <a class="loginPrompt" href="auth/spotify"><em>Login with Spotify for better results.</em></a>
 
-    <div class="" style="position: absolute; right: 20px;">
-      <a href="auth/logout"><button type="button" name="button">Logout</button></a>
-    </div>
+      <div class="nowPlayingContainer"></div>
 
-    <!-- Essentially, our aim is to have the source for iframes as per the data fetched using API calls.-->
-    <% if((spotifyTrackIdEjs.length + spotifyAlbumIdUniqueEjs.length + spotifyTrackArtistIdUniqueEjs.length) > 3 && spotifyTrackIdEjs != null && spotifyAlbumIdUniqueEjs != null && spotifyTrackArtistIdUniqueEjs != null ) { %>
+      <h3 class="itemHeading">Watch</h3>
+      <% for(i = 0; i < Object.keys(ytQueryEjs.id).length; i++) { %>
+      <div id="ytQueryEjs<%= i %>" class="item">
+        <img class="itemThumb itemThumbVideo" src="<%= ytQueryEjs.thumb[i] %>" width="" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= ytQueryEjs.title[i] %><br></p>
+          <p class="itemChannel"><%= ytQueryEjs.channel[i] %></p>
+        </div>
+      </div>
+      <% } %>
 
-    <h3>Listen (Spotify)</h3>
+      <h3 class="itemHeading">Covers</h3>
+      <% for(i = 0; i < Object.keys(ytCoverUniqueEjs.id).length; i++) { %>
+      <div id="ytCoverUniqueEjs<%= i %>" class="item">
+        <img class="itemThumb itemThumbVideo" src="<%= ytCoverUniqueEjs.thumb[i] %>" width="" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= ytCoverUniqueEjs.title[i] %><br></p>
+          <p class="itemChannel"><%= ytCoverUniqueEjs.channel[i] %></p>
+        </div>
+      </div>
+      <% } %>
+
+      <h3 class="itemHeading">Live</h3>
+      <% for(i = 0; i < Object.keys(ytLiveUniqueEjs.id).length; i++) { %>
+      <div id="ytLiveUniqueEjs<%= i %>" class="item">
+        <img class="itemThumb itemThumbVideo" src="<%= ytLiveUniqueEjs.thumb[i] %>" width="" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= ytLiveUniqueEjs.title[i] %><br></p>
+          <p class="itemChannel"><%= ytLiveUniqueEjs.channel[i] %></p>
+        </div>
+      </div>
+      <% } %>
+
+    </section>
+
+    <% } %>
+
+
+    <% if(user) { %>
+
+    <section class="contentContainer">
+
+      <div class="nowPlayingContainer"></div>
+
+      <!-- Essentially, our aim is to have the source for iframes as per the data fetched using API calls.-->
+
+      <% if((spotifyTrackId.length + spotifyUniqueAlbumId.length + spotifyUniqueTrackArtistId.length) > 3 && spotifyTrackId != null && spotifyUniqueAlbumId != null && spotifyUniqueTrackArtistId != null ) { %>
+
+      <h3 class="itemHeading">Listen</h3>
 
       <!-- Track 00, Album 00_00, Artist 00_00, 00_01 (if exists, else hidden), Track 01, 02, 03  -->
       <% let i = 0 %>
 
       <!-- 0 Track 00 -->
-      <iframe src="https://open.spotify.com/embed?uri=spotify:track:<%= spotifyTrackIdEjs [0] %>" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+      <div id="spotifyTrackId0" class="item itemSpotify">
+        <img class="itemThumb" src="<%= spotifyTrackThumb[0] %>" width="" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= spotifyTrackTitle[0] %><br></p>
+          <p class="itemChannel">Song <span style="font-size: ;">&#8226;</span> <%= spotifyTrackArtist[0] %></p>
+        </div>
+      </div>
 
       <!-- 0 Track 00 Album 00 -->
-      <iframe src="https://open.spotify.com/embed?uri=spotify:album:<%= spotifyAlbumIdUniqueEjs[0] %>" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+      <div id="spotifyUniqueAlbumId<%= i %>" class="item itemSpotify">
+        <img class="itemThumb" src="<%= spotifyUniqueAlbumThumb[0] %>" width="" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= spotifyUniqueAlbumName[0] %><br></p>
+          <p class="itemChannel">Album <span style="font-size: ;">&#8226;</span> <%= spotifyUniqueAlbumArtist[0] %></p>
+        </div>
+      </div>
 
       <!-- 0 Track 00 Artist 00-->
-      <iframe src="https://open.spotify.com/embed/artist/<%= spotifyTrackArtistIdUniqueEjs[0] %>" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+      <div id="spotifyUniqueTrackArtistId<%= i %>" class="item itemSpotify itemArtist">
+        <img class="itemThumb itemThumbArtist" src="<%= spotifyUniqueTrackArtistThumb[0] %>" width="46" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= spotifyUniqueTrackArtistName[0] %><br></p>
+          <p class="itemChannel">Artist</p>
+        </div>
+      </div>
 
       <!-- Track 01, 02, 03 -->
-      <% for(i = 1; i < spotifyTrackIdEjs.length; i++) { %>
-      <iframe src="https://open.spotify.com/embed/track/<%= spotifyTrackIdEjs[i] %>" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+      <% for(i = 1; i < spotifyTrackId.length; i++) { %>
+      <div id="spotifyTrackId<%= i %>" class="item itemSpotify">
+        <img class="itemThumb" src="<%= spotifyTrackThumb[i] %>" width="" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= spotifyTrackTitle[i] %><br></p>
+          <p class="itemChannel">Song <span style="font-size: ;">&#8226;</span> <%= spotifyTrackArtist[i] %></p>
+        </div>
+      </div>
       <% } %>
-    <% } %>
 
+      <% } %>
 
-    <h3>Watch</h3>
-    <% for(i = 0; i < ytQueryEjs.length; i++) { %>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/<%= ytQueryEjs[i] %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    <% } %>
+      <h3 class="itemHeading">Watch</h3>
+      <% for(i = 0; i < Object.keys(ytQueryEjs.id).length; i++) { %>
+      <div id="ytQueryEjs<%= i %>" class="item">
+        <img class="itemThumb itemThumbVideo" src="<%= ytQueryEjs.thumb[i] %>" width="" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= ytQueryEjs.title[i] %><br></p>
+          <p class="itemChannel"><%= ytQueryEjs.channel[i] %></p>
+        </div>
+      </div>
+      <% } %>
 
-    <!-- We are putting greater than '2' in the following 'if', because both the Artist ID arrays contains atleast one element, even if its value is null. -->
-    <% if (((spotifyTrackArtistIdUniqueEjs.length) + (spotifyQueryArtistIdUniqueEjs.length)) > 2 && spotifyTrackArtistIdUniqueEjs !=null && spotifyQueryArtistIdUniqueEjs != null) { %>
-      <h3>Artists</h3>
+      <h3 class="itemHeading">Cover</h3>
+      <% for(i = 0; i < Object.keys(ytCoverUniqueEjs.id).length; i++) { %>
+      <div id="ytCoverUniqueEjs<%= i %>" class="item">
+        <img class="itemThumb itemThumbVideo" src="<%= ytCoverUniqueEjs.thumb[i] %>" width="" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= ytCoverUniqueEjs.title[i] %><br></p>
+          <p class="itemChannel"><%= ytCoverUniqueEjs.channel[i] %></p>
+        </div>
+      </div>
+      <% } %>      
+
+      <!-- We are putting greater than '2' in the following 'if', because both the Artist ID arrays contains atleast one element, even if its value is null. -->
+      <% if (((spotifyUniqueTrackArtistId.length) + (spotifyUniqueQueryArtistId.length)) > 2 && spotifyUniqueTrackArtistId !=null && spotifyUniqueQueryArtistId != null) { %>
+      <h3 class="itemHeading">Artists</h3>
 
       <!-- Showcasing all the next artists of Track 00 (if exists), all artists of Track 01 and Track 02.  -->
-      <% for(i = 1; i < spotifyTrackArtistIdUniqueEjs.length; i++) { %>
-        <iframe src="https://open.spotify.com/embed/artist/<%= spotifyTrackArtistIdUniqueEjs[i] %>" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+      <% for(i = 1; i < spotifyUniqueTrackArtistId.length; i++) { %>
+      <div id="spotifyUniqueTrackArtistId<%= i %>" class="item itemSpotify itemArtist">
+        <img class="itemThumb itemThumbArtist" src="<%= spotifyUniqueTrackArtistThumb[i] %>" width="46" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= spotifyUniqueTrackArtistName[i] %><br></p>
+          <p class="itemChannel">Artist</p>
+        </div>
+      </div>
       <% } %>
 
       <!-- Showcasing 4 artists that match queryValue. -->
-      <% for(i = 0; i < spotifyQueryArtistIdUniqueEjs.length; i++) { %>
-        <iframe src="https://open.spotify.com/embed/artist/<%= spotifyQueryArtistIdUniqueEjs[i] %>" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+      <% for(i = 0; i < spotifyUniqueQueryArtistId.length; i++) { %>
+      <div id="spotifyUniqueQueryArtistId<%= i %>" class="item itemSpotify itemArtist">
+        <img class="itemThumb itemThumbArtist" src="<%= spotifyUniqueQueryArtistThumb[i] %>" width="46" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= spotifyUniqueQueryArtistName[i] %><br></p>
+          <p class="itemChannel">Artist</p>
+        </div>
+      </div>
       <% } %>
+      <% } %>
+
+      <h3 class="itemHeading">Live</h3>
+      <% for(i = 0; i < Object.keys(ytLiveUniqueEjs.id).length; i++) { %>
+      <div id="ytLiveUniqueEjs<%= i %>" class="item">
+        <img class="itemThumb itemThumbVideo" src="<%= ytLiveUniqueEjs.thumb[i] %>" width="" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= ytLiveUniqueEjs.title[i] %><br></p>
+          <p class="itemChannel"><%= ytLiveUniqueEjs.channel[i] %></p>
+        </div>
+      </div>
+      <% } %>
+
+      <% if(spotifyUniqueAlbumId.length > 0 && spotifyUniqueAlbumId != null) { %>
+
+      <h3 class="itemHeading">Albums</h3>
+
+      <% for (i = 1; i < spotifyUniqueAlbumId.length; i++) { %>
+      <div id="spotifyUniqueAlbumId<%= i %>" class="item itemSpotify">
+        <img class="itemThumb" src="<%= spotifyUniqueAlbumThumb[i] %>" width="" height="" alt="">
+        <div class="itemInfo">
+          <p class="itemTitle"><%= spotifyUniqueAlbumName[i] %><br></p>
+          <p class="itemChannel">Album <span style="font-size: ;">&#8226;</span> <%= spotifyUniqueAlbumArtist[i] %></p>
+        </div>
+      </div>
+      <% } %>
+
+      <% } %>
+
+      <% } %>
+
+    </section>
+
+    <section class="footer">
+
+      <% if (user) { %>
+        <a class="logout" href="auth/logout">Logout</a>
+      <% } %>
+
+      <hr>
+
+      <div class="downloads">
+        <!-- <img class="pwa" src="./img/app_store/pwa.png" alt="pwa_badge" /> -->
+        <img class="googlePlay" src="./img/app_store/google_play.png" alt="google_play_badge" />
+        <img class="appStore" src="./img/app_store/app_store.svg" alt="app_store_badge" />
+      </div>
+
+    </section>
+
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/jquery.color-animation/1/mainfile"></script> -->
+
+  <script type="text/javascript">
+
+
+  if($(window).width() > 767) {
+    $(".logo").attr("src", "./img/logo/one_music-short-4.0-long-2.0.svg");
+  }
+
+  $('.item').hover(function(){
+        $(this).animate({'backgroundColor': '#171717'}, 100);
+    }, function(){
+        $(this).animate({'backgroundColor': 'black'}, 200);
+    });
+
+    <% for(i = 0; i < Object.keys(ytQueryEjs).length ;i++) { %>
+    $("#ytQueryEjs<%= i %>").on("click", () => {
+      $(".nowPlayingContainer").html(
+        "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingYt'></div>"
+      )
+      $(".nowPlayingYt").html("<iframe width='560' height='315' src='https://www.youtube.com/embed/<%= ytQueryEjs.id[i] %>' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>");
+      $('html, body').animate({
+        scrollTop: $(".nowPlayingContainer").offset().top
+    }, 50);
+    });
+  <% } %>
+
+  <% for(i = 0; i < Object.keys(ytCoverUniqueEjs).length ;i++) { %>
+    $("#ytCoverUniqueEjs<%= i %>").on("click", () => {
+      $(".nowPlayingContainer").html(
+        "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingYt'></div>"
+      )
+      $(".nowPlayingYt").html("<iframe width='560' height='315' src='https://www.youtube.com/embed/<%= ytCoverUniqueEjs.id[i] %>' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>");
+      $('html, body').animate({
+        scrollTop: $(".nowPlayingContainer").offset().top
+      }, 50);
+    });
+  <% } %>
+
+  <% for(i = 0; i < Object.keys(ytLiveUniqueEjs).length ;i++) { %>
+    $("#ytLiveUniqueEjs<%= i %>").on("click", () => {
+      $(".nowPlayingContainer").html(
+        "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingYt'></div>"
+      )
+      $(".nowPlayingYt").html("<iframe width='560' height='315' src='https://www.youtube.com/embed/<%= ytLiveUniqueEjs.id[i] %>' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>");
+      $('html, body').animate({
+        scrollTop: $(".nowPlayingContainer").offset().top
+      }, 50);
+    });
+  <% } %>
+
+  <% if (user) { %>
+    <% if(!user) { %>
+      window.confirm("'Sup, bruh! Session is currently just an hour long. We're sorry. Please press 'OK' for instant re-login. :)");
+      if(confirm) {
+        window.location.href = "/auth/spotify";
+      }
     <% } %>
 
+  <% for(i = 0; i < Object.keys(spotifyTrackId).length; i++) { %>
+    $("#spotifyTrackId<%= i %>").on("click", () => {
+      $(".nowPlayingContainer").html(
+        "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
+      )
+      $(".nowPlayingSpotify").html("<iframe src='https://open.spotify.com/embed/track/<%= spotifyTrackId[i] %>' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>");
+      $('html, body').animate({
+        scrollTop: $(".nowPlayingContainer").offset().top
+    }, 50);
+    });
+  <% } %>
 
-    <% if(spotifyAlbumIdUniqueEjs.length > 0 && spotifyAlbumIdUniqueEjs != null) { %>
+  <% for(i = 0; i < Object.keys(spotifyUniqueTrackArtistId).length; i++) { %>
+    $("#spotifyUniqueTrackArtistId<%= i %>").on("click", () => {
+      $(".nowPlayingContainer").html(
+        "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
+      )
+      $(".nowPlayingSpotify").html("<iframe src='https://open.spotify.com/embed/artist/<%= spotifyUniqueTrackArtistId[i] %>' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>");
+      $('html, body').animate({
+        scrollTop: $(".nowPlayingContainer").offset().top
+    }, 50);
+    });
+  <% } %>
 
-    <h3>Albums</h3>
+  <% for(i = 0; i < Object.keys(spotifyUniqueQueryArtistId).length; i++) { %>
+    $("#spotifyUniqueQueryArtistId<%= i %>").on("click", () => {
+      $(".nowPlayingContainer").html(
+        "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
+      )
+      $(".nowPlayingSpotify").html("<iframe src='https://open.spotify.com/embed/artist/<%= spotifyUniqueQueryArtistId[i] %>' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>");
+      $('html, body').animate({
+        scrollTop: $(".nowPlayingContainer").offset().top
+    }, 50);
+    });
+  <% } %>
 
-    <% for (i = 1; i < spotifyAlbumIdUniqueEjs.length; i++) { %>
-    <iframe src="https://open.spotify.com/embed/album/<%= spotifyAlbumIdUniqueEjs[i] %>" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-    <% } %>
-
-    <% } %>
-
-    <h3>Live Performance</h3>
-    <% for(i = 0; i < ytLiveUniqueEjs.length; i++) { %>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/<%= ytLiveUniqueEjs[i] %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    <% } %>
-
-    <h3>Covers</h3>
-    <% for(i = 0; i < ytCoverUniqueEjs.length; i++) { %>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/<%= ytCoverUniqueEjs[i] %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    <% } %>
-
-  <% } else { %>
-    <div class="">
-      <a href="auth/spotify"><button type="button" name="button">Login (via Spotify)</button></a>
-    </div>
-
-    <h3>Watch</h3>
-    <% for(i = 0; i < ytQueryEjs.length; i++) { %>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/<%= ytQueryEjs[i] %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    <% } %>
-
-    <h3>Covers</h3>
-    <% for(i = 0; i < ytCoverUniqueEjs.length; i++) { %>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/<%= ytCoverUniqueEjs[i] %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    <% } %>
-
-    <h3>Live Performance</h3>
-    <% for(i = 0; i < ytLiveUniqueEjs.length; i++) { %>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/<%= ytLiveUniqueEjs[i] %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    <% } %>
+  <% for(i = 0; i < Object.keys(spotifyUniqueAlbumId).length; i++) { %>
+    $("#spotifyUniqueAlbumId<%= i %>").on("click", () => {
+      $(".nowPlayingContainer").html(
+        "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
+      )
+      $(".nowPlayingSpotify").html("<iframe src='https://open.spotify.com/embed/album/<%= spotifyUniqueAlbumId[i] %>' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>");
+      $('html, body').animate({
+        scrollTop: $(".nowPlayingContainer").offset().top
+    }, 50);
+    });
+  <% } %>
 
   <% } %>
 
-  <!-- <script type="text/javascript">
-  <% if(!userEjs) { %>
-    window.confirm("This web app depends on Spotify. Click 'OK' to log-in. ");
-    if(confirm) {
-      window.location.href = "/auth/spotify";
-    }
-  <% } %>
-  </script> -->
+  </script>
 
 </body>
 

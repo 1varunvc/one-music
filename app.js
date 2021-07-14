@@ -154,7 +154,7 @@ async function ytAxiosGetFunc(queryOfYtAxiosGetFunc, maxResultsOfYtAxiosGetFunc)
   let ytVideoThumb = [];
   let ytVideoTitle = [];
   let ytVideoChannel = [];
-  urlOfYtAxiosGetFunc = "https://www.googleapis.com/youtube/v3/search?key=" + keys.google.apiKey[0] + "&part=snippet&order=relevance&type=video&videoEmbeddable=true";
+  urlOfYtAxiosGetFunc = "https://www.googleapis.com/youtube/v3/search?key=" + keys.google.apiKey[1] + "&part=snippet&order=relevance&type=video&videoEmbeddable=true";
 
   try {
     let ytResponse = await axios({

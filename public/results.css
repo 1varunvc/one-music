@@ -1,1 +1,8 @@
-//This file empty yet.
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.itemInfo {
+  padding-left: 5px;
+}

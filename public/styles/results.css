@@ -1,0 +1,426 @@
+/* This is a mobile-first design. */
+body {
+  background-color: black;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+}
+
+/*============ Grid ============*/
+.bodyContainer {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-gap: 3px;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto auto;
+}
+
+.logo {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+}
+
+.searchInputContainer {
+  grid-column: 2 / -1;
+  grid-row: 1 / 2;
+}
+
+.contentContainer {
+  /* position: relative;        /* I do not remember why it was set to relative. */
+  grid-column: 1 / -1;
+  grid-row: 2 / 3;
+}
+
+.footer {
+  grid-column: 1 / -1;
+  grid-row: 3 / -1;
+}
+
+/*============ Decoration and Alignment ============*/
+.logo {
+  width: auto;
+  height: 1.8rem;
+  margin: 0 0.2rem 0 0;
+}
+
+.searchInputContainer {
+  background-color: hsl(0,0%,8.2%);
+  color: hsl(0,0%,100%);
+  /* background-color: orange; */
+  border-radius: 50px;
+}
+
+.searchInput {
+  background-color: hsl(0,0%,8.2%);
+  color: hsl(0,0%,100%);
+  /* background-color: maroon; */
+  height: 2rem;
+  width: 90%;
+  font-size: 1rem;
+  padding-left: 1rem;
+  padding-right: 0rem;
+  border: none;
+  border-radius: 50px;
+}
+
+.searchButton {
+  background-color: hsl(0,0%,8.2%);
+  color: hsl(0, 0%, 50%);
+  /* background-color: black; */
+  position: absolute;
+  right: 1rem;
+  height: 1.9rem;
+  font-size: 1em;
+  border: none;
+  border-radius: 50%;
+}
+
+/* The red-effect on 'focus' and 'hover' */
+.searchInputContainer:focus, .searchInputContainer:hover {
+  border-color: rgb(255, 0, 0);
+  border-color: hsla(0, 100%, 50%, 0.6);
+  outline: 0;
+  outline: thin dotted 9;
+  -webkit-box-shadow: inset 0 1px 1px rgb(0, 0, 0), 0 0 8px rgb(255, 0, 0);
+  -webkit-box-shadow: inset 0 1px 1px hsla(0, 0%, 0%, 0.075), 0 0 8px hsla(0, 100%, 50%, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgb(0, 0, 0), 0 0 8px rgb(255, 0, 0);
+  -moz-box-shadow: inset 0 1px 1px hsla(0, 0%, 0%, 0.075), 0 0 8px hsla(0, 100%, 50%, 0.6);
+  box-shadow: inset 0 1px 1px rgb(0, 0, 0), 0 0 8px rgb(255, 0, 0);
+  box-shadow: inset 0 1px 1px hsla(0, 0%, 0%, 0.075), 0 0 8px hsla(0, 100%, 50%, 0.6);
+}
+
+ .searchButton, .searchInput{
+   outline: 0;
+ }
+
+[type="search"]::-webkit-search-cancel-button, [type="search"]::-webkit-search-decoration {
+  margin: 0 0.1rem 0 0.5rem;
+}
+
+/* Styling Login Prompt */
+a.loginPrompt {
+  color: rgb(128, 128, 128);
+  color: hsl(0, 0%, 50%);
+  font-family: 'Roboto Slab', serif;
+  font-size: 0.75rem;
+}
+a.loginPrompt:link {
+  text-decoration: underline;
+}
+
+a.loginPrompt:visited {
+  text-decoration: none;
+}
+
+a.loginPrompt:hover {
+  text-decoration: none;
+}
+
+a.loginPrompt:active {
+  text-decoration: underline;
+}
+
+/* [Responsive] Now Playing [Widget]*/
+.nowPlayingYt {
+   position: relative;
+   overflow: hidden;
+   width: 100%;
+   padding-top: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+}
+
+/* [Responsive] Now Playing [Widget]*/
+.nowPlayingSpotify {
+   position: relative;
+   overflow: hidden;
+   width: auto;
+   padding-top: 121%; /* 15:19 Aspect Ratio (divide 19 by 15 = 1.26666666667) */
+}
+
+iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Setting itemInfo to be on the right of itemThumb */
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.itemInfo {
+  padding-left: 0.5rem;
+}
+
+.itemChannel {
+  color: #bbbbbb;
+}
+
+/* Styling items in 'contentContainer' */
+.contentContainer {
+  margin: 0.55rem;
+}
+
+.itemHeading {
+  margin-top: 2rem;
+  margin-bottom: 0.7rem;
+  font-weight: 900;
+}
+
+.item {
+  margin-bottom: 0.6rem;
+  border-radius: 1.5px;
+}
+
+.itemSpotify {
+  margin-bottom: 0.8rem;
+}
+
+.itemArtist {
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+}
+
+.itemThumb {
+  width: 2.9rem;
+  height: auto;
+  border-radius: 1.5px;
+}
+
+.itemThumbArtist {
+  clip-path: circle(50% at 50% 50%);
+}
+
+.itemTitle {
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.itemChannel {
+  font-size: 0.7rem;
+  font-weight: 300;
+  margin: 0;
+}
+
+/*============== Footer ==============*/
+a.logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto Slab', serif;
+  font-size: 0.75rem;
+}
+
+a.logout:link {
+  color: rgb(128, 128, 128);
+  color: hsl(0, 0%, 50%);
+  text-decoration: none;
+}
+
+a.logout:visited {
+  color: rgb(128, 128, 128);
+  color: hsl(0, 0%, 50%);
+  text-decoration: none;
+}
+
+a.logout:hover {
+  color: rgb(221, 221, 221);
+  color: hsl(0, 0%, 86.7%);
+  text-decoration: underline;
+}
+
+a.logout:active {
+  color: rgb(221, 221, 221);
+  color: hsl(0, 0%, 86.7%);
+  text-decoration: underline;
+}
+
+hr {
+  border-color: rgb(128, 128, 128);
+  border-color: hsl(0, 0%, 50%);
+  width: 1rem;
+  margin-top: 0.4rem;
+  border-width: 1px 0 0 0;
+}
+
+.downloads {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* .pwa {
+  height: 2.204rem;
+} */
+
+.googlePlay {
+  height: 3.335rem;
+}
+
+.appStore {
+  height: 2.31rem;
+  margin-top: 0.04rem;
+}
+
+/* Extending Compatibility */
+/* https://gist.github.com/gokulkrishh/242e68d1ee94ad05f488 */
+
+/* Samsung Galaxy Fold */
+@media screen and (min-width: 280px) and (max-width: 280px) {
+  .searchInput {
+    width: 85%;
+  }
+
+  .itemThumb {
+    width: 3.5rem;
+  }
+  .itemTitle {
+    font-size: 0.8rem;
+  }
+
+  .itemChannel {
+    font-size: 0.7rem;
+  }
+}
+
+/* Device = Low Resolution Tablets, Mobiles (Landscape); Screen = B/w 481px to 767px */
+@media screen and (min-width: 481px) and (max-width: 767px) {
+  .searchInput {
+    width: 92.5%;
+  }
+}
+
+/* Device = Tablets, Ipads (portrait and landscape); Screen = B/w 768px to 1023*px */
+@media screen and (min-width: 768px) {
+  /*============ Grid ============*/
+  .bodyContainer {
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .searchInputContainer {
+    grid-column: 2 / 3;
+  }
+
+  .contentContainer {
+    grid-column: 2 / 3;
+  }
+
+  /*============ Decoration and Alignment ============*/
+  .logo, .searchInputContainer {
+    margin-top: 0.5rem;
+  }
+
+  .searchInput {
+    height: 2.5rem;
+    font-size: 1.1rem;
+    padding-left: 1.2rem;
+  }
+
+  .searchButton {
+    right: 19%;
+    height: 2.5rem;
+    font-size: 1.1rem;
+  }
+
+  .nowPlayingSpotify {
+    padding-top: 110%;
+  }
+
+  .itemThumb {
+    width: 4rem;
+  }
+
+  .itemTitle {
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .itemChannel {
+    font-size: 0.8rem;
+  }
+
+  /* [Responsive] Now Playing [Widget]*/
+  .nowPlayingSpotify {
+    padding-top: 118%;
+  }
+}
+
+/* Device = Laptops, Desktops; Screen = B/w 1024px to 1280px */
+@media screen and (min-width: 1024px){
+  /*============ Grid ============*/
+  .bodyContainer {
+    grid-template-columns: 1fr 3fr 1fr;
+  }
+
+  /*============ Decoration and Alignment ============*/
+  .searchInput {
+    height: 2.7rem;
+    width: 90%;
+    font-size: 1.3rem;
+    padding-left: 1.3rem;
+  }
+
+  .searchButton {
+    right: 21.5%;
+    height: 2.7rem;
+    font-size: 1.3rem;
+  }
+
+  .itemHeading {
+    font-size: 1.4rem;
+  }
+
+  .itemThumb {
+    width: 3.5rem;
+  }
+
+  .itemInfo {
+    padding-left: 1rem;
+  }
+
+  .itemTitle {
+    font-size: 1rem;
+    margin-bottom: 0.22rem;
+  }
+
+  .itemChannel {
+    font-size: 0.9rem;
+  }
+
+  /* [Responsive] Now Playing [Widget]*/
+  .nowPlayingSpotify {
+    max-width: 29.5rem;
+    padding-top: 70.4%;
+  }
+
+/* Device = Desktops; Screen = 1281px to higher resolution desktops */
+@media screen and (min-width: 1281px) {
+
+  /* CSS */
+
+}
+
+/* @media screen and (min-width: 641px) {
+  /*============ Grid ============
+  .bodyContainer {
+    grid-template-columns: 0.3fr 1fr 1fr;
+  }
+
+  .logo {
+    grid-column: 1 / 2;
+  }
+
+  .searchForm {
+    grid-column: 2 / 4;
+  }
+
+  .contentContainer{
+    grid-column: 2 / 3;
+  }
+} */

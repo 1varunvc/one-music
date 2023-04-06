@@ -1,0 +1,371 @@
+/* This is a mobile-first design. */
+body {
+  background-color: rgb(0,0,0);                            /* Fallback Value */
+  background-color: hsl(0, 0%, 0%);
+  color: rgb(255,255,255);
+  color: hsl(0, 0%, 100%);
+}
+
+/* Locating all the elements */
+.logoSearchLogin {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.logout {
+  position: absolute;
+  top: 5%;
+  right: 0.1%;
+  transform: translate(-50%, -50%);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchInputContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.downloads {
+  position: absolute;
+  top: 95%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sizing and decorating all the elements */
+.logoImg {
+  width: 13.5rem;
+  height: auto;
+}
+
+.searchInputContainer {
+  margin-top: 2rem;
+  margin-bottom: 1.25rem;
+  background-color: rgb(21,21,21);
+  background-color: hsl(0, 0%, 8.2%);
+  color: rgb(255,255,255);
+  color: hsl(0, 0%, 100%);
+  border-radius: 50px;
+}
+
+.searchInput {
+  background-color: rgb(21,21,21);
+  background-color: hsl(0, 0%, 8.2%);
+  color: rgb(255,255,255);
+  color: hsl(0, 0%, 100%);
+  height: 3rem;
+  width: 20rem;
+  font-size: 1rem;
+  padding-left: 1.3rem;
+  border: none;
+  border-radius: 50px;
+}
+
+.searchButton {
+  background-color: rgb(21,21,21);
+  background-color: hsl(0, 0%, 8.2%);
+  color: rgb(128,128,128);
+  color: hsl(0, 0%, 50%);
+  height: 3rem;
+  font-size: 1.15rem;
+  padding-right: 0.25rem;
+  margin-right: 0.7rem;
+  border: none;
+  border-radius: 50%;
+}
+
+.pwa {
+  height: 2.204rem;
+}
+
+.googlePlay {
+  height: 3.335rem;
+}
+
+.appStore {
+  height: 2.31rem;
+  margin-top: 0.04rem;
+}
+
+a.logout {
+  font-family: 'Roboto Slab', serif;
+  font-size: 0.75rem;
+}
+
+/* The red-effect on 'focus' */
+.searchInputContainer:focus, .searchInputContainer:hover {
+  border-color: rgb(255, 0, 0);
+  border-color: hsla(0, 100%, 50%, 0.6);
+  outline: 0;
+  outline: thin dotted 9;
+  -webkit-box-shadow: inset 0 1px 1px rgb(0, 0, 0), 0 0 8px rgb(255, 0, 0);
+  -webkit-box-shadow: inset 0 1px 1px hsla(0, 0%, 0%, 0.075), 0 0 8px hsla(0, 100%, 50%, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgb(0, 0, 0), 0 0 8px rgb(255, 0, 0);
+  -moz-box-shadow: inset 0 1px 1px hsla(0, 0%, 0%, 0.075), 0 0 8px hsla(0, 100%, 50%, 0.6);
+  box-shadow: inset 0 1px 1px rgb(0, 0, 0), 0 0 8px rgb(255, 0, 0);
+  box-shadow: inset 0 1px 1px hsla(0, 0%, 0%, 0.075), 0 0 8px hsla(0, 100%, 50%, 0.6);
+}
+
+.searchButton, .searchInput {
+  outline: 0;
+}
+
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
+  margin: 0 0.5rem;
+}
+
+/* Decoratin Login Button */
+:root {
+  --text-color: hsl(0, 0%, 100%);
+  --shadow-color: hsla(129, 40%, 52%, 0.4);
+  --btn-color: hsl(141.2, 72.9%, 42%);
+  --bg-color: #141218;
+  --bg-color: hsl(260, 14.3%, 8.2%);
+}
+
+.loginButton {
+  box-sizing: border-box;
+  font-family: 'Lobster', cursive;
+}
+
+.login {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.loginButton {
+  position: relative;
+  padding: 0.625rem 1.25rem;
+  /* 'This' changes the padding of the button. */
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: 900;
+  font-size: 0.8rem;
+  color: rgb(255,255,255);
+  color: var(--text-color);
+  background-color: rgb(29,185,84);
+  background-color: var(--btn-color);
+  box-shadow: rgb(84, 182, 98) 2px 2px 22px;
+  box-shadow: var(--shadow-color) 2px 2px 22px;
+  border-radius: 4px;
+  z-index: 0;
+  overflow: hidden;
+}
+
+button.loginButton:focus {
+  outline-color: transparent;
+  box-shadow: rgb(29,185,84) 2px 2px 22px;
+  box-shadow: var(--btn-color) 2px 2px 22px;
+}
+
+.right::after, button.loginButton::after {
+  content: var(--content);
+  display: block;
+  position: absolute;
+  white-space: nowrap;
+  padding: 40px 40px;
+  pointer-events: none;
+}
+
+button.loginButton::after {
+  font-weight: 200;
+  top: -30px;
+  left: -20px;
+}
+
+.right, .left {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+}
+
+.right {
+  left: 66%;
+}
+
+.left {
+  right: 66%;
+}
+
+.right::after {
+  top: -30px;
+  left: calc(-66% - 20px);
+  background-color: rgb(20,18,24);
+  background-color: var(--bg-color);
+  color: transparent;
+  transition: transform .4s ease-out;
+  transform: translate(0, -90%) rotate(0deg)
+}
+
+button.loginButton:hover .right::after {
+  transform: translate(0, -47%) rotate(0deg)
+}
+
+button.loginButton .right:hover::after {
+  transform: translate(0, -50%) rotate(-7deg)
+}
+
+button.loginButton .left:hover~.right::after {
+  transform: translate(0, -50%) rotate(7deg)
+}
+
+/* bubbles */
+button.loginButton::before {
+  content: '';
+  pointer-events: none;
+  opacity: .6;
+  background:
+    radial-gradient(circle at 20% 35%, transparent 0, transparent 2px, rgb(255,255,255) 3px, rgb(255,255,255) 4px, transparent 4px),
+    radial-gradient(circle at 20% 35%, transparent 0, transparent 2px, var(--text-color) 3px, var(--text-color) 4px, transparent 4px),
+    radial-gradient(circle at 75% 44%, transparent 0, transparent 2px, rgb(255,255,255) 3px, rgb(255,255,255) 4px, transparent 4px),
+    radial-gradient(circle at 75% 44%, transparent 0, transparent 2px, var(--text-color) 3px, var(--text-color) 4px, transparent 4px),
+    radial-gradient(circle at 46% 52%, transparent 0, transparent 4px, rgb(255,255,255) 5px, rgb(255,255,255) 6px, transparent 6px),
+    radial-gradient(circle at 46% 52%, transparent 0, transparent 4px, var(--text-color) 5px, var(--text-color) 6px, transparent 6px);
+  width: 100%;
+  height: 300%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  animation: bubbles 5s linear infinite both;
+}
+
+@keyframes bubbles {
+  from {
+    transform: translate();
+  }
+
+  to {
+    transform: translate(0, -66.666%);
+  }
+}
+
+/* Stlying Logout */
+a.logout:link {
+  color: rgb(128, 128, 128);
+  color: hsl(0, 0%, 50%);
+  text-decoration: none;
+}
+
+a.logout:visited {
+  color: rgb(128, 128, 128);
+  color: hsl(0, 0%, 50%);
+  text-decoration: none;
+}
+
+a.logout:hover {
+  color: rgb(221, 221, 221);
+  color: hsl(0, 0%, 86.7%);
+  text-decoration: underline;
+}
+
+a.logout:active {
+  color: rgb(221, 221, 221);
+  color: hsl(0, 0%, 86.7%);
+  text-decoration: underline;
+}
+
+/* Extending Compatibility */
+@media screen and (min-width: 600px) {
+  .logoSearchLogin {
+    top: 43%;
+  }
+
+  .searchInputContainer {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+  }
+
+  .logoImg {
+    width: 15rem;
+  }
+
+  .searchInput {
+    height: 3rem;
+    width: 29rem;
+    font-size: 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .searchButton {
+    height: 3rem;
+    font-size: 1.55rem;
+    padding-left: 0;
+    padding-right: 0.25rem;
+    margin: 0 0.8rem 0 0.5rem;
+  }
+
+  button.loginButton {
+    font-size: 1rem;
+    font-weight: normal;
+    /* padding: 0.625rem  1.25rem; */
+  }
+
+  a.logout {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (min-width: 700px) {
+  .logoImg {
+    width: 17rem;
+  }
+
+  .searchInput {
+    height: 3.5rem;
+    width: 35rem;
+    font-size: 1.3rem;
+    padding-left: 2rem;
+  }
+
+  .searchButton {
+    height: 3.5rem;
+    font-size: 1.75rem;
+  }
+
+  button.loginButton {
+    font-size: 1.2rem;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .logoImg {
+    width: 20rem;
+  }
+
+  .searchInput {
+    height: 4rem;
+    width: 40.75rem;
+    font-size: 1.5rem;
+  }
+
+  .searchButton {
+    height: 4rem;
+    font-size: 2rem;
+  }
+
+  button.loginButton {
+    font-size: 1.5rem;
+  }
+}

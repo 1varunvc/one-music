@@ -84,12 +84,6 @@ mongoose.connect(keys.mongoDb.dbURI, {
   console.log("Connected to mongoDb Atlas.")
 })
 
-// https://stackoverflow.com/a/14930567/14597561
-function compareAndRemove(removeFromThis, compareToThis) {
-  removeFromThis = removeFromThis.filter(val => !compareToThis.includes(val));
-  return (removeFromThis);
-}
-
 // The page to load when the browser (client) makes request to GET something from the server on "/", i.e., from the homepage.
 // This GET request is made as soon as the homepage url is entered in the address bar od browser, automatically.
 app.get("/", function(req, res) {
@@ -98,9 +92,6 @@ app.get("/", function(req, res) {
     user: req.user
   });
 });
-
-// Declaring variables for the function 'ytAxiosGetFunc'
-let urlOfYtAxiosGetFunc = "";
 
 // The data that server should POST when the POST request is sent by the client, upon entering the search queryValue, in the search bar (form).
 app.post("/", async function (req, res) {

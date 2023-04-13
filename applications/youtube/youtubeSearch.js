@@ -17,7 +17,7 @@ let ytLiveUniqueAppJs = [];
 // Declaring variables for the function 'ytAxiosGetFunc'
 let urlOfYtAxiosGetFunc = "";
 
-async function youtubeSearch(req) {
+async function youtubeSearch(req, res = null) {
     // This function GETs data, parses it, allocates required values in an array.
     async function ytAxiosGetFunc(queryOfYtAxiosGetFunc, maxResultsOfYtAxiosGetFunc) {
 
@@ -149,6 +149,15 @@ async function youtubeSearch(req) {
         console.log("ytLiveUniqueAppJs:");
         console.log(ytLiveUniqueAppJs);
     }
+
+    // The 'results' named EJS file is rendered and fed in response. The 'required' data is passed into it using the following variable(s).
+    res.render("results", {
+        user: req.user,
+        query: query,
+        ytQueryEjs: ytQueryAppJs,
+        ytCoverUniqueEjs: ytCoverUniqueAppJs,
+        ytLiveUniqueEjs: ytLiveUniqueAppJs
+    });
 
     console.log("Values to be sent for rendering: ");
     console.log("ytQueryAppJs");

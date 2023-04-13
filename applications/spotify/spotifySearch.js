@@ -1,6 +1,7 @@
+const { app } = require('../../app');
+
 // 'https' is used to fetch response from the API path. It is a native expressjs package and doesn't require us to create a new 'app' letiable.
 const https = require("https");
-
 
 // 'body-parser' is used to access tags from the html file. We'll be using it to access queryValue.
 const bodyParser = require("body-parser");
@@ -57,7 +58,7 @@ let spotifyUniqueAlbumName = [];
 let spotifyUniqueQueryAlbumArtist = [];
 let spotifyUniqueAlbumArtist = [];
 
-function spotifySearch(req) {
+function spotifySearch(req, res) {
     // The user input query. We are using body-parser package here.
     query = req.body.queryValue;
 
@@ -341,6 +342,51 @@ function spotifySearch(req) {
                 console.log(spotifyUniqueQueryAlbumArtist);
                 console.groupEnd();
 
+                /* Error Handling for Spotify
+                     // The 'results' named EJS file is rendered and fed in response. The 'required' data is passed into it using the following variable(s).
+                     // A folder named 'views' has to be in the same directory as "app.js". That folder contains 'results.ejs'.
+
+                     if(spotifyTrackId.length > 1 && spotifyUniqueTrackArtistId.length > 1 && spotifyUniqueQueryArtistId.length > 1 && spotifyUniqueAlbumId.length > 1) {
+                       res.render("noResults", {
+                         query: query,
+                         user: req.user
+                       });
+                     }
+                    */
+                // else {
+                res.render("results", {
+                    query: query,
+                    user: req.user,
+
+                    ytQueryEjs: ytQueryAppJs,
+                    ytCoverUniqueEjs: ytCoverUniqueAppJs,
+                    ytLiveUniqueEjs: ytLiveUniqueAppJs,
+
+                    spotifyTrackId: spotifyTrackId,
+                    spotifyTrackThumb: spotifyTrackThumb,
+                    spotifyTrackTitle: spotifyTrackTitle,
+                    spotifyTrackArtist: spotifyTrackArtist,
+
+                    spotifyUniqueTrackArtistId: spotifyUniqueTrackArtistId,
+                    spotifyUniqueTrackArtistThumb: spotifyUniqueTrackArtistThumb,
+                    spotifyUniqueTrackArtistName: spotifyUniqueTrackArtistName,
+
+                    spotifyUniqueQueryArtistId: spotifyUniqueQueryArtistId,
+                    spotifyUniqueQueryArtistThumb: spotifyUniqueQueryArtistThumb,
+                    spotifyUniqueQueryArtistName: spotifyUniqueQueryArtistName,
+
+                    spotifyAlbumId: spotifyAlbumId,
+                    spotifyAlbumThumb: spotifyAlbumThumb,
+                    spotifyAlbumName: spotifyAlbumName,
+                    // spotifyAlbumArtist: spotifyAlbumArtist,
+
+                    spotifyUniqueAlbumId: spotifyUniqueAlbumId,
+                    spotifyUniqueAlbumThumb: spotifyUniqueAlbumThumb,
+                    spotifyUniqueAlbumName: spotifyUniqueAlbumName,
+                    spotifyUniqueAlbumArtist: spotifyUniqueAlbumArtist,
+                })
+                // }
+
                 console.log("\n");
                 console.groupCollapsed("Unique Album(s) (ID):");
                 console.info(spotifyUniqueAlbumId);
@@ -355,7 +401,6 @@ function spotifySearch(req) {
                 console.info(spotifyUniqueAlbumArtist);
                 console.groupEnd();
             }
-
         }).catch((error) => {
         console.error(error);
         console.log("Status '" + error.response.status + "': " + error.response.statusText);

@@ -19,7 +19,7 @@ const authRoutes = require("./routes/auth-routes");
 // The following makes auth-routes understand the strategy named, "spotify".
 const passportSetup = require("./config/passport-setup");
 
-// monogoDb compatible library: mongoose.
+// mongoDb compatible library: mongoose.
 const mongoose = require("mongoose");
 
 // To link the keys.

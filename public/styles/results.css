@@ -352,7 +352,7 @@ hr {
 }
 
 /* Device = Laptops, Desktops; Screen = B/w 1024px to 1280px */
-@media screen and (min-width: 1024px){
+@media screen and (min-width: 1024px) {
   /*============ Grid ============*/
   .bodyContainer {
     grid-template-columns: 1fr 3fr 1fr;
@@ -398,6 +398,7 @@ hr {
     max-width: 29.5rem;
     padding-top: 70.4%;
   }
+}
 
 /* Device = Desktops; Screen = 1281px to higher resolution desktops */
 @media screen and (min-width: 1281px) {

@@ -1,0 +1,13 @@
+
+<% for(i = 0; i < Object.keys(spotifyTrackId).length; i++) { %>
+    $("#spotifyTrackId<%= i %>").on("click", () => {
+        $(".nowPlayingContainer").html(
+            "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
+        )
+        $(".nowPlayingSpotify").html("<iframe src='/spotify-proxy?url=https://open.spotify.com/embed/track/<%= spotifyTrackId[i] %>' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>");
+        $(".nowPlayingSpotify").html(getPlayer());
+        $('html, body').animate({
+            scrollTop: $(".nowPlayingContainer").offset().top
+        }, 50);
+    });
+    <% } %>

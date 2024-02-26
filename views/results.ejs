@@ -230,8 +230,29 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <!-- <script src="https://cdn.jsdelivr.net/jquery.color-animation/1/mainfile"></script> -->
 
+  <!-- The following two script embeds are for superagent or something. -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=WeakRef,BigInt"></script>
+  <script src="https://cdn.jsdelivr.net/npm/superagent"></script>
+
   <script type="text/javascript">
 
+    /**
+     * This function is not a part of the original code.
+     * Retrieves a Spotify player for the given track identifier.
+     *
+     * @param {string} type - The type of the Spotify resource to retrieve (e.g. 'track,' 'playlist,' 'album.')
+     * @param {string} identifier - The identifier of the Spotify track to retrieve.
+     */
+    async function getPlayer(type, identifier) {
+      const DESKTOP_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36';
+      const response = await superagent
+              .get("https://open.spotify.com/embed/" + type + "/" + identifier)
+              .set("Referrer Policy", "strict-origin-when-cross-origin")
+              .set("Access-Control-Allow-Origin", "http://localhost:3000/")
+              .set("User-Agent", DESKTOP_USER_AGENT);
+      console.log(response);
+      return response.text;
+    }
 
   if($(window).width() > 767) {
     $(".logo").attr("src", "./img/logo/one_music-short-4.0-long-2.0.svg");
@@ -287,17 +308,37 @@
       }
     <% } %>
 
-  <% for(i = 0; i < Object.keys(spotifyTrackId).length; i++) { %>
+    <% for (i = 0; i < Object.keys(spotifyTrackId).length; i++) { %>
     $("#spotifyTrackId<%= i %>").on("click", () => {
       $(".nowPlayingContainer").html(
-        "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
-      )
-      $(".nowPlayingSpotify").html("<iframe src='https://open.spotify.com/embed/track/<%= spotifyTrackId[i] %>' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>");
-      $('html, body').animate({
-        scrollTop: $(".nowPlayingContainer").offset().top
-    }, 50);
+              "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
+      );
+      getPlayer("track", "<%= spotifyTrackId[i] %>", function (err, html) {
+        if (err) {
+          console.error(err);
+        } else {
+          $(".nowPlayingSpotify").html(html);
+          $('html, body').animate({
+            scrollTop: $(".nowPlayingContainer").offset().top
+          }, 50);
+        }
+      });
     });
-  <% } %>
+    <% } %>
+
+    /* The original loop that was in the place of the loop starting at line 310.
+      <% for(i = 0; i < Object.keys(spotifyTrackId).length; i++) { %>
+        $("#spotifyTrackId<%= i %>").on("click", () => {
+          $(".nowPlayingContainer").html(
+            "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
+          )
+          $(".nowPlayingSpotify").html("<iframe src='https://open.spotify.com/embed/track/<%= spotifyTrackId[i] %>' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>");
+          $('html, body').animate({
+            scrollTop: $(".nowPlayingContainer").offset().top
+        }, 50);
+        });
+      <% } %>
+      */
 
   <% for(i = 0; i < Object.keys(spotifyUniqueTrackArtistId).length; i++) { %>
     $("#spotifyUniqueTrackArtistId<%= i %>").on("click", () => {

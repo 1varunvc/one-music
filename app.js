@@ -38,7 +38,13 @@ const he = require("he");
 
 const ejsLint = require('ejs-lint');
 
-// This app constant is created to be able to access the menthods available in 'express' package.
+// The following two constants were not here originally.
+const superagent = require('superagent');
+
+const CircularJSON = require('circular-json');
+
+
+// This app constant is created to be able to access the methods available in 'express' package.
 const app = express();
 
 // 'urlencoded' helps access html data. Other data formats could JSON etc.
@@ -143,6 +149,48 @@ app.get("/", function(req, res) {
   });
 });
 
+// The following code until line 190 is not a part of the original code.
+app.get('/spotify-proxy', async (req, res) => {
+
+  const DESKTOP_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36';
+  // const COOKIE = "sp_t=486b106fa2743ce02cd67430424c109b; sp_dc=AQCaJ8SEln8nOaE4KkT50V6kJFbgTZXx0rsMCsiE2O566QRJYl7hnlFeUhK-vwqEJlu4psruDTG_f6GZ4VSnqzIxOY6G_4fOIIp7R00abDdYRAf9yKpgtwksnemyuqGwkt5Gp35bn43Rhc-uI7W9PXXKi15lw-Y; sp_key=552b8cab-d021-43e3-ae2a-b3f147738870; sp_landing=https://open.spotify.com/embed/track/4R2kfaDFhslZEMJqAFNpdd?sp_cid=486b106fa2743ce02cd67430424c109b&device=desktop"
+  // const COOKIE = "__Host-device_id=AQAiviyTBFUYfQ2FQ9NU8QGnrCR75Gg49SMEfVASvuN3PRD93b9MMMaVctM8-dT8TYD0LqTiEd6gGaQo2pmTlhLV8_xqf1PPwRo; sp_t=486b106fa2743ce02cd67430424c109b; sp_m=in-en; OptanonAlertBoxClosed=2023-01-16T07:41:05.981Z; _gcl_au=1.1.1310936527.1682404732; sp_dc=AQCaJ8SEln8nOaE4KkT50V6kJFbgTZXx0rsMCsiE2O566QRJYl7hnlFeUhK-vwqEJlu4psruDTG_f6GZ4VSnqzIxOY6G_4fOIIp7R00abDdYRAf9yKpgtwksnemyuqGwkt5Gp35bn43Rhc-uI7W9PXXKi15lw-Y; sp_key=552b8cab-d021-43e3-ae2a-b3f147738870; sp_gaid=0088fc2e34a9d055a134bddfdb86141709e182f32121931066fa87; OptanonConsent=isIABGlobal=false&datestamp=Mon+May+01+2023+15%3A22%3A20+GMT%2B0530+(India+Standard+Time)&version=6.26.0&hosts=&landingPath=NotLandingPage&groups=s00%3A1%2Cf00%3A0%2Cm00%3A0%2Ct00%3A0%2Ci00%3A0%2Cf11%3A0&geolocation=IN%3BHR&AwaitingReconsent=false; _ga=GA1.1.567394068.1682934741; _ga_ZWRF3NLZJZ=GS1.1.1682934740.1.0.1682935028.0.0.0; inapptestgroup=; sp_tr=false; sp_landing=https%3A%2F%2Fopen.spotify.com%2Fembed%2Fartist%2F2TJHmhbmT7L3gw2NKyDTHh%3Fsp_cid%3D486b106fa2743ce02cd67430424c109b%26device%3Ddesktop"
+  const COOKIE = "sp_t=486b106fa2743ce02cd67430424c109b; sp_dc=AQCaJ8SEln8nOaE4KkT50V6kJFbgTZXx0rsMCsiE2O566QRJYl7hnlFeUhK-vwqEJlu4psruDTG_f6GZ4VSnqzIxOY6G_4fOIIp7R00abDdYRAf9yKpgtwksnemyuqGwkt5Gp35bn43Rhc-uI7W9PXXKi15lw-Y; sp_key=552b8cab-d021-43e3-ae2a-b3f147738870; sp_gaid=0088fc2e34a9d055a134bddfdb86141709e182f32121931066fa87; sp_landing=https://open.spotify.com/embed/artist/2TJHmhbmT7L3gw2NKyDTHh?sp_cid=486b106fa2743ce02cd67430424c109b&device=mobile";
+
+  const url = req.query.url;
+  const headers = {
+    'User-Agent': DESKTOP_USER_AGENT,
+    'cookie': COOKIE
+  };
+
+  if (!url) {
+    return res.status(400).send('Missing the url parameter.');
+  }
+
+  console.log(`Proxy server received request for url: ${url}`);
+
+  try {
+    const response = await axios.get(url, {headers});
+    res.send(response.data);
+    console.log("The response from the Spotify's server has been sent to the user, by the [proxy] server.");
+  } catch (error) {
+    if (error.code === 'ENOTFOUND') {
+      console.error(`Error: Spotify server not found for url ${url}`);
+      return res.status(404).send('Spotify server not found');
+    } else if (error.code === 'ETIMEDOUT') {
+      console.error(`Error: Spotify server timed out for url ${url}`);
+      return res.status(408).send('Spotify server timed out');
+    } else if (error.code === 'ECONNREFUSED') {
+      console.error(`Error: Spotify server refused connection for url ${url}`);
+      return res.status(502).send('Spotify server refused connection');
+    } else {
+      console.error(error);
+      return res.sendStatus(500);
+    }
+  }
+})
+
+
 // Declaring variables for the function 'ytAxiosGetFunc'
 let urlOfYtAxiosGetFunc = "";
 
@@ -209,7 +257,7 @@ app.post("/", async function(req, res) {
     // Accessing the queryValue user submitted in index.html.
     query = req.body.queryValue;
 
-    // Fetcing top results related to user's query and putting them in the array.
+    // Fetching top results related to user's query and putting them in the array.
     ytQueryAppJs = await ytAxiosGetFunc(query, 4);
     console.log("ytQueryAppJs:");
     console.log(ytQueryAppJs);
@@ -1080,4 +1128,42 @@ spotifyQueryArtistName: spotifyQueryArtistName,
 
   ytLiveAppJs.length = 0;
   ytLiveUniqueAppJs.length = 0;
+*/
+
+// The following code until line 1169 is not a part of the original code.
+// Make the request for iFrame to spotify via the server. Superagent is used to set headers for the request.
+/*
+app.get('/spotify-proxy', async (req, res) => {
+  try {
+    const response = await superagent
+        .get(req.query.url)
+        .set('User-Agent', DESKTOP_USER_AGENT);
+    console.log(`User-Agent: ${req.headers["user-agent"]}`);
+    console.log(req.query.url);
+    res.send(response.text);
+  } catch (error) {
+    if (error.code === 'ENOTFOUND') {
+      console.error(`Error: Spotify server not found for url ${url}`);
+      return res.status(404).send('Spotify server not found');
+    } else if (error.code === 'ETIMEDOUT') {
+      console.error(`Error: Spotify server timed out for url ${url}`);
+      return res.status(408).send('Spotify server timed out');
+    } else if (error.code === 'ECONNREFUSED') {
+      console.error(`Error: Spotify server refused connection for url ${url}`);
+      return res.status(502).send('Spotify server refused connection');
+    } else {
+      console.error(error);
+      return res.sendStatus(500);
+    }
+  }
+  /*
+  catch (error) {
+    if (error.response) {
+      res.status(error.response.status).send(error.response.text);
+    } else {
+      res.status(500).send(error.message);
+    }
+  }
+
+})
 */

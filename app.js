@@ -186,8 +186,8 @@ async function ytAxiosGetFunc(queryOfYtAxiosGetFunc, maxResultsOfYtAxiosGetFunc)
   }
 }
 
-// The data that server should POST when the POST request is sent by the client, upon entering the search queryValue, in the search bar (form).
-app.post("/", async function(req, res) {
+// The data that server should GET when the GET request is sent by the client, upon entering the search queryValue, in the search bar (form).
+app.get("/search", async function(req, res) {
 
   let query = "";
 
@@ -207,7 +207,7 @@ app.post("/", async function(req, res) {
 
   if (!req.user) {
     // Accessing the queryValue user submitted in index.html.
-    query = req.body.queryValue;
+    query = req.query.queryValue;
 
     // Fetcing top results related to user's query and putting them in the array.
     ytQueryAppJs = await ytAxiosGetFunc(query, 4);

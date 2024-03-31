@@ -18,11 +18,11 @@
       <a class="logo" id="header" href="/"><img class="logoImg" src="img/logo/one_music-short-2.3.3-long-2.0-loop_count-1.gif" alt="One Music"></a>
     </header>
 
-    <!-- POST request to fetch data related to queryValue.  -->
-    <form class="searchForm" action="/" method="post">
+    <!-- GET request to fetch data related to queryValue.  -->
+    <form class="searchForm" action="/search" method="get">
       <div class="searchInputContainer">
         <input class="searchInput" id="queryId" type="search" name="queryValue" placeholder="Search" autocomplete="off" required>
-        <button class="searchButton" type="submit" name="button">
+        <button class="searchButton" type="submit">
           &#5125;&#xFE0E;
         </button>
       </div>

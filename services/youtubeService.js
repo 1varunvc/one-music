@@ -1,6 +1,6 @@
 const axios = require("axios");
 const he = require("he");
-const keys = require("../config/keys"); // Adjust the path as necessary
+const keys = require("../config/keys");
 
 let ytQueryResult = "";
 let ytCoverResult = "";

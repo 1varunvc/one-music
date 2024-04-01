@@ -143,15 +143,12 @@ app.get("/search", async function(req, res) {
     Object.assign(results, spotifyResults);
   }
 
-  console.log("DFSGSDFGDSFg");
-  console.log(results);
-
   res.render("results", {
     query: query,
     user: req.user,
 
-    ytQueryEjs: results.ytQueryAppJs,
-    // If there is no key named 'id' in ytCoverUniqueAppJs, set its values as { id: [], thumb: [], title: [], channel: [] }.
+    // If there is no key named 'id' in ytQueryAppJs, set its values as { id: [], thumb: [], title: [], channel: [] }.
+    ytQueryEjs: (results.ytQueryAppJs && 'id' in results.ytQueryAppJs) ? results.ytQueryAppJs : { id: [], thumb: [], title: [], channel: [] },
     ytCoverUniqueEjs: (results.ytCoverUniqueAppJs && 'id' in results.ytCoverUniqueAppJs) ? results.ytCoverUniqueAppJs : { id: [], thumb: [], title: [], channel: [] },
     ytLiveUniqueEjs: (results.ytLiveUniqueAppJs && 'id' in results.ytLiveUniqueAppJs) ? results.ytLiveUniqueAppJs : { id: [], thumb: [], title: [], channel: [] },
 

@@ -148,7 +148,7 @@
           <p class="itemChannel"><%= ytCoverUniqueEjs.channel[i] %></p>
         </div>
       </div>
-      <% } %>      
+      <% } %>
 
       <!-- We are putting greater than '2' in the following 'if', because both the Artist ID arrays contains atleast one element, even if its value is null. -->
       <% if (((spotifyUniqueTrackArtistId.length) + (spotifyUniqueQueryArtistId.length)) > 2 && spotifyUniqueTrackArtistId !=null && spotifyUniqueQueryArtistId != null) { %>
@@ -232,8 +232,13 @@
 
   <script type="text/javascript">
 
+    function isMobileDeviceOrNonChromeBrowser() {
+      const isMobile = /Android|webOS|iPhone|iPod|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isNonChromeBrowser = !/Chrome/.test(navigator.userAgent) && !/Chromium/.test(navigator.userAgent);
+      return isMobile || isNonChromeBrowser;
+    }
 
-  if($(window).width() > 767) {
+    if($(window).width() > 767) {
     $(".logo").attr("src", "./img/logo/one_music-short-4.0-long-2.0.svg");
   }
 
@@ -288,14 +293,23 @@
     <% } %>
 
   <% for(i = 0; i < Object.keys(spotifyTrackId).length; i++) { %>
-    $("#spotifyTrackId<%= i %>").on("click", () => {
+    $("#spotifyTrackId<%= i %>").on("click", async () => {
       $(".nowPlayingContainer").html(
-        "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
+              "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
       )
-      $(".nowPlayingSpotify").html("<iframe src='https://open.spotify.com/embed/track/<%= spotifyTrackId[i] %>' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>");
       $('html, body').animate({
         scrollTop: $(".nowPlayingContainer").offset().top
-    }, 50);
+      }, 50);
+      const playerID = "<%= spotifyTrackId[i] %>"
+
+      if (isMobileDeviceOrNonChromeBrowser()) {
+        // Make an AJAX request to the server for mobile devices or non-Chrome browsers
+        const response = await fetch(`/get-spotify-iframe?playerID=${playerID}`);
+        const iframeHTML = await response.text(); // Assuming the server returns the iframe HTML
+        $(".nowPlayingSpotify").html(iframeHTML);
+      } else {
+        $(".nowPlayingSpotify").html("<iframe src='https://open.spotify.com/embed/track/<%= spotifyTrackId[i] %>' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>");
+      }
     });
   <% } %>
 

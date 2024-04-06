@@ -177,6 +177,20 @@ app.get("/search", async function(req, res) {
   })
 });
 
+app.get('/get-spotify-iframe', async (req, res) => {
+
+  const { playerID } = req.query;
+  const oEmbedURL = `https://open.spotify.com/oembed?url=` + encodeURIComponent(`https://open.spotify.com/track/${playerID}`);
+  try {
+    const response = await axios.get(oEmbedURL);
+    const { html: iframeHTML } = response.data;
+    res.send(iframeHTML);
+  } catch (error) {
+    console.error('Error making Spotify OEmbed request', error);
+    res.status(500).send('Server error');
+  }
+});
+
 /* Attempt to update access token, using refresh token. Everything works, apart from User.findOneAndUpdate({ });.
 
 // // The following was added nearby, "app.post("/", function(req, res) {"

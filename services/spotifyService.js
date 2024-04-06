@@ -377,12 +377,12 @@ async function fetchSpotifyResults(query, accessToken) {
 
             // }
         }).catch((error) => {
-        console.error(error);
-        console.log("Status '" + error.response.status + "': " + error.response.statusText);
-        // if(error.response.status == 401) {
-        //   res.send("Access token expired. Please open the website again and login.")
-        // }
-    });
+            console.error(error);
+            console.log("Status '" + error.response.status + "': " + error.response.statusText);
+            // if(error.response.status == 401) {
+            //   res.send("Access token expired. Please open the website again and login.")
+            // }
+        });
     return {
         spotifyTrackId: spotifyTrackId,
         spotifyTrackThumb: spotifyTrackThumb,

@@ -65,10 +65,10 @@ function compareAndRemove(removeFromThis, compareToThis) {
 }
 
 async function fetchYouTubeResults(query) {
-    // Fetching top results related to user's query and putting them in the array.
-    ytQueryAppJs = await ytAxiosGetFunc(query, 4);
-    console.log("ytQueryAppJs:");
-    console.log(ytQueryAppJs);
+    // // Fetching top results related to user's query and putting them in the array.
+    // ytQueryAppJs = await ytAxiosGetFunc(query, 4);
+    // console.log("ytQueryAppJs:");
+    // console.log(ytQueryAppJs);
 
     // Fetching 'cover' songs related to user's query and putting them in the array.
     if (query.includes("cover") === true) {
@@ -98,18 +98,18 @@ async function fetchYouTubeResults(query) {
         console.log("ytCoverUniqueAppJs:");
         console.log(ytCoverUniqueAppJs);
     } else {
-        ytCoverAppJs = await ytAxiosGetFunc(query + " cover", 4);
-        console.log("ytCoverAppJs:");
-        console.log(ytCoverAppJs);
-
-        // Removing redundant values.
-        ytCoverUniqueAppJs.id = compareAndRemove(ytCoverAppJs.id, ytQueryAppJs.id);
-        ytCoverUniqueAppJs.thumb = compareAndRemove(ytCoverAppJs.thumb, ytQueryAppJs.thumb);
-        ytCoverUniqueAppJs.title = compareAndRemove(ytCoverAppJs.title, ytQueryAppJs.title);
-        ytCoverUniqueAppJs.channel = compareAndRemove(ytCoverAppJs.channel, ytQueryAppJs.channel);
-
-        console.log("ytCoverUniqueAppJs:");
-        console.log(ytCoverUniqueAppJs);
+        // ytCoverAppJs = await ytAxiosGetFunc(query + " cover", 4);
+        // console.log("ytCoverAppJs:");
+        // console.log(ytCoverAppJs);
+        //
+        // // Removing redundant values.
+        // ytCoverUniqueAppJs.id = compareAndRemove(ytCoverAppJs.id, ytQueryAppJs.id);
+        // ytCoverUniqueAppJs.thumb = compareAndRemove(ytCoverAppJs.thumb, ytQueryAppJs.thumb);
+        // ytCoverUniqueAppJs.title = compareAndRemove(ytCoverAppJs.title, ytQueryAppJs.title);
+        // ytCoverUniqueAppJs.channel = compareAndRemove(ytCoverAppJs.channel, ytQueryAppJs.channel);
+        //
+        // console.log("ytCoverUniqueAppJs:");
+        // console.log(ytCoverUniqueAppJs);
     }
 
     // Fetching 'live performances' related to user's query and putting them in the array.
@@ -140,18 +140,18 @@ async function fetchYouTubeResults(query) {
         console.log("ytLiveUniqueAppJs:");
         console.log(ytLiveUniqueAppJs);
     } else {
-        ytLiveAppJs = await ytAxiosGetFunc(query + " live", 4);
-        console.log("ytLiveAppJs:");
-        console.log(ytLiveAppJs);
-
-        // Removing redundant values.
-        ytLiveUniqueAppJs.id = compareAndRemove(ytLiveAppJs.id, (ytQueryAppJs.id).concat(ytCoverUniqueAppJs.id));
-        ytLiveUniqueAppJs.thumb = compareAndRemove(ytLiveAppJs.thumb, (ytQueryAppJs.thumb).concat(ytCoverUniqueAppJs.thumb));
-        ytLiveUniqueAppJs.title = compareAndRemove(ytLiveAppJs.title, (ytQueryAppJs.title).concat(ytCoverUniqueAppJs.title));
-        ytLiveUniqueAppJs.channel = compareAndRemove(ytLiveAppJs.channel, (ytQueryAppJs.channel).concat(ytCoverUniqueAppJs.channel));
-
-        console.log("ytLiveUniqueAppJs:");
-        console.log(ytLiveUniqueAppJs);
+        // ytLiveAppJs = await ytAxiosGetFunc(query + " live", 4);
+        // console.log("ytLiveAppJs:");
+        // console.log(ytLiveAppJs);
+        //
+        // // Removing redundant values.
+        // ytLiveUniqueAppJs.id = compareAndRemove(ytLiveAppJs.id, (ytQueryAppJs.id).concat(ytCoverUniqueAppJs.id));
+        // ytLiveUniqueAppJs.thumb = compareAndRemove(ytLiveAppJs.thumb, (ytQueryAppJs.thumb).concat(ytCoverUniqueAppJs.thumb));
+        // ytLiveUniqueAppJs.title = compareAndRemove(ytLiveAppJs.title, (ytQueryAppJs.title).concat(ytCoverUniqueAppJs.title));
+        // ytLiveUniqueAppJs.channel = compareAndRemove(ytLiveAppJs.channel, (ytQueryAppJs.channel).concat(ytCoverUniqueAppJs.channel));
+        //
+        // console.log("ytLiveUniqueAppJs:");
+        // console.log(ytLiveUniqueAppJs);
     }
 
     console.log("Values to be sent for rendering: ");

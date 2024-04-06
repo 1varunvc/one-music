@@ -234,7 +234,7 @@
 
     function isMobileDeviceOrNonChromeBrowser() {
       const isMobile = /Android|webOS|iPhone|iPod|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      const isNonChromeBrowser = !/Chrome/.test(navigator.userAgent) && !/Chromium/.test(navigator.userAgent);
+      const isNonChromeBrowser = navigator.userAgentData.brands.some(brand => brand.brand !== "Google Chrome");
       return isMobile || isNonChromeBrowser;
     }
 
@@ -303,7 +303,7 @@
       const playerID = "<%= spotifyTrackId[i] %>"
 
       if (isMobileDeviceOrNonChromeBrowser()) {
-        // Make an AJAX request to the server for mobile devices or non-Chrome browsers
+        console.log("Making an AJAX request to the server for mobile devices or non-Chrome browsers");
         const response = await fetch(`/get-spotify-iframe?playerID=${playerID}`);
         const iframeHTML = await response.text(); // Assuming the server returns the iframe HTML
         $(".nowPlayingSpotify").html(iframeHTML);

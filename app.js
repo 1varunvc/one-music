@@ -180,11 +180,11 @@ app.get("/search", async function(req, res) {
 app.get('/get-spotify-iframe', async (req, res) => {
 
   const { playerID } = req.query;
-  const oEmbedURL = `https://open.spotify.com/oembed?url=` + encodeURIComponent(`https://open.spotify.com/track/${playerID}`);
+  const iFrameURL = `https://open.spotify.com/embed/track/${playerID}?utm_source=generator`;
   try {
-    const response = await axios.get(oEmbedURL);
-    const { html: iframeHTML } = response.data;
-    res.send(iframeHTML);
+    const response = await axios.get(iFrameURL);
+    const { data: iframeHTML } = response;
+    res.send(`<iframe src="https://open.spotify.com/embed/track/${playerID}" width="300" height="380" frameBorder="0" allowTransparency="true" allow="encrypted-media">#document (https://open.spotify.com/embed/track/${playerID})${iframeHTML}</iframe>`);
   } catch (error) {
     console.error('Error making Spotify OEmbed request', error);
     res.status(500).send('Server error');

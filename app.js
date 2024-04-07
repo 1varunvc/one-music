@@ -144,12 +144,20 @@ app.get("/search", async function(req, res) {
     Object.assign(results, spotifyResults);
   }
 
+  let view;
+
+  if (req.user) {
+    view = "partialResultsLoggedIn";
+  } else {
+    view = "partialResultsNotLoggedIn"
+  }
+
   if (isAjaxRequest) {
     // For AJAX requests, render the EJS template to a string
-    res.render("results", {
+    res.render(view, {
       layout: false, // Assuming you're using an Express layout, this disables it
       query: query,
-      user: req.user,
+      user: !!req.user,
 
       // If there is no key named 'id' in ytQueryAppJs, set its values as { id: [], thumb: [], title: [], channel: [] }.
       ytQueryEjs: (results.ytQueryAppJs && 'id' in results.ytQueryAppJs) ? results.ytQueryAppJs : {
@@ -205,7 +213,7 @@ app.get("/search", async function(req, res) {
     // Regular request, render the page for normal search results
     res.render("results", {
       query: query,
-      user: req.user,
+      user: !!req.user,
 
       // If there is no key named 'id' in ytQueryAppJs, set its values as { id: [], thumb: [], title: [], channel: [] }.
       ytQueryEjs: (results.ytQueryAppJs && 'id' in results.ytQueryAppJs) ? results.ytQueryAppJs : {

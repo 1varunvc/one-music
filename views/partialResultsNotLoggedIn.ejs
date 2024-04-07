@@ -1,0 +1,36 @@
+
+<h3 class="itemHeading">Watch</h3>
+<% for(i = 0; i < Object.keys(ytQueryEjs.id).length; i++) { %>
+    <div id="ytQueryEjs<%= i %>" class="item">
+        <img class="itemThumb itemThumbVideo" src="<%= ytQueryEjs.thumb[i] %>" width="" height=""
+             alt="">
+        <div class="itemInfo">
+            <p class="itemTitle"><%= ytQueryEjs.title[i] %><br></p>
+            <p class="itemChannel"><%= ytQueryEjs.channel[i] %></p>
+        </div>
+    </div>
+<% } %>
+
+<h3 class="itemHeading">Covers</h3>
+<% for(i = 0; i < Object.keys(ytCoverUniqueEjs.id).length; i++) { %>
+    <div id="ytCoverUniqueEjs<%= i %>" class="item">
+        <img class="itemThumb itemThumbVideo" src="<%= ytCoverUniqueEjs.thumb[i] %>" width="" height=""
+             alt="">
+        <div class="itemInfo">
+            <p class="itemTitle"><%= ytCoverUniqueEjs.title[i] %><br></p>
+            <p class="itemChannel"><%= ytCoverUniqueEjs.channel[i] %></p>
+        </div>
+    </div>
+<% } %>
+
+<h3 class="itemHeading">Live</h3>
+<% for(i = 0; i < Object.keys(ytLiveUniqueEjs.id).length; i++) { %>
+    <div id="ytLiveUniqueEjs<%= i %>" class="item">
+        <img class="itemThumb itemThumbVideo" src="<%= ytLiveUniqueEjs.thumb[i] %>" width="" height=""
+             alt="">
+        <div class="itemInfo">
+            <p class="itemTitle"><%= ytLiveUniqueEjs.title[i] %><br></p>
+            <p class="itemChannel"><%= ytLiveUniqueEjs.channel[i] %></p>
+        </div>
+    </div>
+<% } %>

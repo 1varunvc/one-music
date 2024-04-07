@@ -118,7 +118,11 @@ function fetchSearchResults(query) {
         .then(response => response.text()) // Expecting text (HTML) response
         .then(html => {
             // Insert the received HTML into the results section of your page
-            document.documentElement.innerHTML = html;
+            if(user) {
+                document.getElementById('searchResultsLoggedIn').innerHTML = html;
+            } else {
+                document.getElementById('searchResultsNotLoggedIn').innerHTML = html;
+            }
             history.pushState({query: query}, "", `?queryValue=${encodeURIComponent(query)}`);
         })
         .catch(error => console.error('Error:', error));

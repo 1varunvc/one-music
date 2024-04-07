@@ -134,6 +134,7 @@ app.get("/search", async function(req, res) {
   // Accessing the queryValue user submitted in index.html.
   const query = req.query.queryValue;
   let results = await fetchYouTubeResults(query);
+  let isAjaxRequest = req.query.ajax === 'true'; // A simple way to signal an AJAX request
 
   let i = 0;
 
@@ -143,38 +144,113 @@ app.get("/search", async function(req, res) {
     Object.assign(results, spotifyResults);
   }
 
-  res.render("results", {
-    query: query,
-    user: req.user,
+  if (isAjaxRequest) {
+    // For AJAX requests, render the EJS template to a string
+    res.render("results", {
+      layout: false, // Assuming you're using an Express layout, this disables it
+      query: query,
+      user: req.user,
 
-    // If there is no key named 'id' in ytQueryAppJs, set its values as { id: [], thumb: [], title: [], channel: [] }.
-    ytQueryEjs: (results.ytQueryAppJs && 'id' in results.ytQueryAppJs) ? results.ytQueryAppJs : { id: [], thumb: [], title: [], channel: [] },
-    ytCoverUniqueEjs: (results.ytCoverUniqueAppJs && 'id' in results.ytCoverUniqueAppJs) ? results.ytCoverUniqueAppJs : { id: [], thumb: [], title: [], channel: [] },
-    ytLiveUniqueEjs: (results.ytLiveUniqueAppJs && 'id' in results.ytLiveUniqueAppJs) ? results.ytLiveUniqueAppJs : { id: [], thumb: [], title: [], channel: [] },
+      // If there is no key named 'id' in ytQueryAppJs, set its values as { id: [], thumb: [], title: [], channel: [] }.
+      ytQueryEjs: (results.ytQueryAppJs && 'id' in results.ytQueryAppJs) ? results.ytQueryAppJs : {
+        id: [],
+        thumb: [],
+        title: [],
+        channel: []
+      },
+      ytCoverUniqueEjs: (results.ytCoverUniqueAppJs && 'id' in results.ytCoverUniqueAppJs) ? results.ytCoverUniqueAppJs : {
+        id: [],
+        thumb: [],
+        title: [],
+        channel: []
+      },
+      ytLiveUniqueEjs: (results.ytLiveUniqueAppJs && 'id' in results.ytLiveUniqueAppJs) ? results.ytLiveUniqueAppJs : {
+        id: [],
+        thumb: [],
+        title: [],
+        channel: []
+      },
 
-    spotifyTrackId: results.spotifyTrackId,
-    spotifyTrackThumb: results.spotifyTrackThumb,
-    spotifyTrackTitle: results.spotifyTrackTitle,
-    spotifyTrackArtist: results.spotifyTrackArtist,
+      spotifyTrackId: results.spotifyTrackId,
+      spotifyTrackThumb: results.spotifyTrackThumb,
+      spotifyTrackTitle: results.spotifyTrackTitle,
+      spotifyTrackArtist: results.spotifyTrackArtist,
 
-    spotifyUniqueTrackArtistId: results.spotifyUniqueTrackArtistId,
-    spotifyUniqueTrackArtistThumb: results.spotifyUniqueTrackArtistThumb,
-    spotifyUniqueTrackArtistName: results.spotifyUniqueTrackArtistName,
+      spotifyUniqueTrackArtistId: results.spotifyUniqueTrackArtistId,
+      spotifyUniqueTrackArtistThumb: results.spotifyUniqueTrackArtistThumb,
+      spotifyUniqueTrackArtistName: results.spotifyUniqueTrackArtistName,
 
-    spotifyUniqueQueryArtistId: results.spotifyUniqueQueryArtistId,
-    spotifyUniqueQueryArtistThumb: results.spotifyUniqueQueryArtistThumb,
-    spotifyUniqueQueryArtistName: results.spotifyUniqueQueryArtistName,
+      spotifyUniqueQueryArtistId: results.spotifyUniqueQueryArtistId,
+      spotifyUniqueQueryArtistThumb: results.spotifyUniqueQueryArtistThumb,
+      spotifyUniqueQueryArtistName: results.spotifyUniqueQueryArtistName,
 
-    spotifyAlbumId: results.spotifyAlbumId,
-    spotifyAlbumThumb: results.spotifyAlbumThumb,
-    spotifyAlbumName: results.spotifyAlbumName,
-    // spotifyAlbumArtist: spotifyAlbumArtist,
+      spotifyAlbumId: results.spotifyAlbumId,
+      spotifyAlbumThumb: results.spotifyAlbumThumb,
+      spotifyAlbumName: results.spotifyAlbumName,
+      // spotifyAlbumArtist: spotifyAlbumArtist,
 
-    spotifyUniqueAlbumId: results.spotifyUniqueAlbumId,
-    spotifyUniqueAlbumThumb: results.spotifyUniqueAlbumThumb,
-    spotifyUniqueAlbumName: results.spotifyUniqueAlbumName,
-    spotifyUniqueAlbumArtist: results.spotifyUniqueAlbumArtist
-  })
+      spotifyUniqueAlbumId: results.spotifyUniqueAlbumId,
+      spotifyUniqueAlbumThumb: results.spotifyUniqueAlbumThumb,
+      spotifyUniqueAlbumName: results.spotifyUniqueAlbumName,
+      spotifyUniqueAlbumArtist: results.spotifyUniqueAlbumArtist
+    }, (err, html) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error rendering results");
+        return;
+      }
+      res.send(html); // Send the rendered HTML as the response
+    });
+  } else {
+    // Regular request, render the page for normal search results
+    res.render("results", {
+      query: query,
+      user: req.user,
+
+      // If there is no key named 'id' in ytQueryAppJs, set its values as { id: [], thumb: [], title: [], channel: [] }.
+      ytQueryEjs: (results.ytQueryAppJs && 'id' in results.ytQueryAppJs) ? results.ytQueryAppJs : {
+        id: [],
+        thumb: [],
+        title: [],
+        channel: []
+      },
+      ytCoverUniqueEjs: (results.ytCoverUniqueAppJs && 'id' in results.ytCoverUniqueAppJs) ? results.ytCoverUniqueAppJs : {
+        id: [],
+        thumb: [],
+        title: [],
+        channel: []
+      },
+      ytLiveUniqueEjs: (results.ytLiveUniqueAppJs && 'id' in results.ytLiveUniqueAppJs) ? results.ytLiveUniqueAppJs : {
+        id: [],
+        thumb: [],
+        title: [],
+        channel: []
+      },
+
+      spotifyTrackId: results.spotifyTrackId,
+      spotifyTrackThumb: results.spotifyTrackThumb,
+      spotifyTrackTitle: results.spotifyTrackTitle,
+      spotifyTrackArtist: results.spotifyTrackArtist,
+
+      spotifyUniqueTrackArtistId: results.spotifyUniqueTrackArtistId,
+      spotifyUniqueTrackArtistThumb: results.spotifyUniqueTrackArtistThumb,
+      spotifyUniqueTrackArtistName: results.spotifyUniqueTrackArtistName,
+
+      spotifyUniqueQueryArtistId: results.spotifyUniqueQueryArtistId,
+      spotifyUniqueQueryArtistThumb: results.spotifyUniqueQueryArtistThumb,
+      spotifyUniqueQueryArtistName: results.spotifyUniqueQueryArtistName,
+
+      spotifyAlbumId: results.spotifyAlbumId,
+      spotifyAlbumThumb: results.spotifyAlbumThumb,
+      spotifyAlbumName: results.spotifyAlbumName,
+      // spotifyAlbumArtist: spotifyAlbumArtist,
+
+      spotifyUniqueAlbumId: results.spotifyUniqueAlbumId,
+      spotifyUniqueAlbumThumb: results.spotifyUniqueAlbumThumb,
+      spotifyUniqueAlbumName: results.spotifyUniqueAlbumName,
+      spotifyUniqueAlbumArtist: results.spotifyUniqueAlbumArtist
+    })
+  }
 });
 
 /* Attempt to update access token, using refresh token. Everything works, apart from User.findOneAndUpdate({ });.

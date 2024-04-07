@@ -2,7 +2,8 @@
 <html lang="en" dir="ltr">
 
 <head>
-  <meta http-equiv="content-type" name="viewport" charset="utf-8" content="text/html; width=device-width, initial-scale=1">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>One Music</title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -227,6 +228,7 @@
   </section>
 
   <script>
+    let user = <%- JSON.stringify(user) %>;
     let ytQueryEjs = <%- JSON.stringify(ytQueryEjs) %>;
     let ytCoverUniqueEjs = <%- JSON.stringify(ytCoverUniqueEjs) %>;
     let ytLiveUniqueEjs = <%- JSON.stringify(ytLiveUniqueEjs) %>;
@@ -248,11 +250,10 @@
     let spotifyUniqueAlbumName = <%- JSON.stringify(spotifyUniqueAlbumName) %>;
     let spotifyUniqueAlbumArtist = <%- JSON.stringify(spotifyUniqueAlbumArtist) %>;
   </script>
-  <script src="/js/results.js"></script>
 
-  <script src="/js/results.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="./js/results.js"></script>
   <!-- <script src="https://cdn.jsdelivr.net/jquery.color-animation/1/mainfile"></script> -->
 
 </body>

@@ -65,6 +65,7 @@ function compareAndRemove(removeFromThis, compareToThis) {
 }
 
 async function fetchYouTubeResults(query) {
+/*
     // Fetching top results related to user's query and putting them in the array.
     ytQueryAppJs = await ytAxiosGetFunc(query, 4);
     console.log("ytQueryAppJs:");
@@ -161,7 +162,7 @@ async function fetchYouTubeResults(query) {
     console.log(ytCoverUniqueAppJs);
     console.log("ytLiveUniqueAppJs");
     console.log(ytLiveUniqueAppJs);
-
+*/
     // The 'results' named EJS file is rendered and fed in response. The 'required' data is passed into it using the following variable(s).
     return {
         ytQueryAppJs: ytQueryAppJs,

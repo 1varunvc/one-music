@@ -1,109 +1,51 @@
 let i = 0;
-$(document).ready(function() {
-if ($(window).width() > 767) {
-    $(".logo").attr("src", "./img/logo/one_music-short-4.0-long-2.0.svg");
-}
+$(document).ready(function () {
+    $('.contentContainer').on('click', '[id^=ytQueryEjs], [id^=ytCoverUniqueEjs], [id^=ytLiveUniqueEjs], [id^=spotifyTrackId], [id^=spotifyUniqueTrackArtistId], [id^=spotifyUniqueQueryArtistId], [id^=spotifyUniqueAlbumId]', function (event) {
+        const id = $(this).attr('id');
+        const baseId = id.match(/^[a-zA-Z]+/g)[0]; // Extracts the base ID
+        const index = parseInt(id.replace(/^\D+/g, ''), 10); // Removes non-digits at the start and parses the rest as integer
 
-$('.item').hover(function () {
-    $(this).animate({'backgroundColor': '#171717'}, 100);
-}, function () {
-    $(this).animate({'backgroundColor': 'black'}, 200);
-});
+        let contentUrl, contentType;
 
-for (i = 0; i < Object.keys(ytQueryEjs).length; i++) {
-    $("#ytQueryEjs" + i.toString()).on("click", () => {
-        $(".nowPlayingContainer").html(
-            "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingYt'></div>"
-        )
-        $(".nowPlayingYt").html(`<iframe width='560' height='315' src='https://www.youtube.com/embed/${ytQueryEjs.id[i]}' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`);
-        $('html, body').animate({
-            scrollTop: $(".nowPlayingContainer").offset().top
-        }, 50);
-    });
-}
+        const ytBaseURL = "https://www.youtube.com/embed";
+        const spotifyBaseURL = "https://open.spotify.com/embed";
 
-for (i = 0; i < Object.keys(ytCoverUniqueEjs).length; i++) {
-    $("#ytCoverUniqueEjs" + i.toString()).on("click", () => {
-        $(".nowPlayingContainer").html(
-            "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingYt'></div>"
-        )
-        $(".nowPlayingYt").html(`<iframe width='560' height='315' src='https://www.youtube.com/embed/${ytCoverUniqueEjs.id[i]}' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`);
-        $('html, body').animate({
-            scrollTop: $(".nowPlayingContainer").offset().top
-        }, 50);
-    });
-}
-
-for (i = 0; i < Object.keys(ytLiveUniqueEjs).length; i++) {
-    $("#ytLiveUniqueEjs" + i.toString()).on("click", () => {
-        $(".nowPlayingContainer").html(
-            "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingYt'></div>"
-        )
-        $(".nowPlayingYt").html(`<iframe width='560' height='315' src='https://www.youtube.com/embed/${ytLiveUniqueEjs.id[i]}' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`);
-        $('html, body').animate({
-            scrollTop: $(".nowPlayingContainer").offset().top
-        }, 50);
-    });
-}
-
-if (user) {
-    if (!user) {
-        window.confirm("'Sup, bruh! Session is currently just an hour long. We're sorry. Please press 'OK' for instant re-login. :)");
-        if (confirm) {
-            window.location.href = "/auth/spotify";
+        // Handling YouTube items
+        if (baseId.startsWith('yt')) {
+            contentType = 'YouTube';
+            if (baseId === 'ytQueryEjs') contentUrl = `${ytBaseURL}/${ytQueryEjs.id[index]}`;
+            else if (baseId === 'ytCoverUniqueEjs') contentUrl = `${ytBaseURL}/${ytCoverUniqueEjs.id[index]}`;
+            else if (baseId === 'ytLiveUniqueEjs') contentUrl = `${ytBaseURL}/${ytLiveUniqueEjs.id[index]}`;
         }
-    }
+        // Handling Spotify items
+        else if (baseId.startsWith('spotify')) {
+            contentType = 'Spotify';
+            if (baseId === 'spotifyTrackId') contentUrl = `${spotifyBaseURL}/track/${spotifyTrackId[index]}`;
+            else if (baseId === 'spotifyUniqueTrackArtistId') contentUrl = `${spotifyBaseURL}/artist/${spotifyUniqueTrackArtistId[index]}`;
+            else if (baseId === 'spotifyUniqueQueryArtistId') contentUrl = `${spotifyBaseURL}/artist/${spotifyUniqueQueryArtistId[index]}`;
+            else if (baseId === 'spotifyUniqueAlbumId') contentUrl = `${spotifyBaseURL}/album/${spotifyUniqueAlbumId[index]}`;
+        }
 
-    for (i = 0; i < Object.keys(spotifyTrackId).length; i++) {
-        $("#spotifyTrackId" + i.toString()).on("click", () => {
-            $(".nowPlayingContainer").html(
-                "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
-            )
-            $(".nowPlayingSpotify").html(`<iframe src='https://open.spotify.com/embed/track/${spotifyTrackId[i]}' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>`);
+        // Update the nowPlayingContainer with the content
+        if (contentUrl && contentType) {
+
+            if (contentType === "YouTube") {
+                $(".nowPlayingContainer").html(
+                    "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingYt'></div>"
+                )
+                $(".nowPlayingYt").html(`<iframe width='560' height='315' src='${contentUrl}' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`);
+            } else {
+                $(".nowPlayingContainer").html(
+                    "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
+                )
+                $(".nowPlayingSpotify").html(`<iframe src='${contentUrl}' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>`);
+            }
+
             $('html, body').animate({
                 scrollTop: $(".nowPlayingContainer").offset().top
             }, 50);
-        });
-    }
-
-    for (i = 0; i < Object.keys(spotifyUniqueTrackArtistId).length; i++) {
-        $("#spotifyUniqueTrackArtistId" + i.toString()).on("click", () => {
-            $(".nowPlayingContainer").html(
-                "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
-            )
-            $(".nowPlayingSpotify").html(`<iframe src='https://open.spotify.com/embed/artist/${spotifyUniqueTrackArtistId[i]}' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>`);
-            $('html, body').animate({
-                scrollTop: $(".nowPlayingContainer").offset().top
-            }, 50);
-        });
-    }
-
-    for (i = 0; i < Object.keys(spotifyUniqueQueryArtistId).length; i++) {
-        $("#spotifyUniqueQueryArtistId" + i.toString()).on("click", () => {
-            $(".nowPlayingContainer").html(
-                "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
-            )
-            $(".nowPlayingSpotify").html(`<iframe src='https://open.spotify.com/embed/artist/${spotifyUniqueQueryArtistId[i]}' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>`);
-            $('html, body').animate({
-                scrollTop: $(".nowPlayingContainer").offset().top
-            }, 50);
-        });
-    }
-
-    for (i = 0; i < Object.keys(spotifyUniqueAlbumId).length; i++) {
-        $("#spotifyUniqueAlbumId" + i.toString()).on("click", () => {
-            $(".nowPlayingContainer").html(
-                "<h3 class='itemHeading' style='padding-top: 1rem; margin-top: 0rem; margin-bottom: 1rem;'>Now Playing</h3><div class='nowPlayingSpotify'></div>"
-            )
-            $(".nowPlayingSpotify").html(`<iframe src='https://open.spotify.com/embed/album/${spotifyUniqueAlbumId[i]}' width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>`);
-            $('html, body').animate({
-                scrollTop: $(".nowPlayingContainer").offset().top
-            }, 50);
-        });
-    }
-
-    i = 0;
-}
+        }
+    });
 });
 
 document.querySelector('.searchForm').addEventListener('submit', function (e) {
@@ -118,7 +60,7 @@ function fetchSearchResults(query) {
         .then(response => response.text()) // Expecting text (HTML) response
         .then(html => {
             // Insert the received HTML into the results section of your page
-            if(user) {
+            if (user) {
                 document.getElementById('searchResultsLoggedIn').innerHTML = html;
             } else {
                 document.getElementById('searchResultsNotLoggedIn').innerHTML = html;

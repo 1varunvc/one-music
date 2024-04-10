@@ -208,7 +208,14 @@ app.get("/search", async function (req, res) {
             return;
         }
 
-        res.send(html);
+        if (view !== "results") {
+            res.json({
+                html: html,
+                updatedData: options
+            });
+        } else {
+            res.send(html);
+        }
     });
 });
 

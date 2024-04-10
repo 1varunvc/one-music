@@ -66,6 +66,19 @@ document.querySelector('.searchForm').addEventListener('submit', function (e) {
 
 var cache = {};
 
+// Update global JavaScript variables with the data received from the server for the dynamically loaded content through the AJAX call.
+function updateData(updatedData) {
+    user = updatedData.user;
+    ytQueryEjs = updatedData.ytQueryEjs;
+    ytCoverUniqueEjs = updatedData.ytCoverUniqueEjs;
+    ytLiveUniqueEjs = updatedData.ytLiveUniqueEjs;
+    spotifyTrackId = updatedData.spotifyTrackId;
+    spotifyUniqueTrackArtistId = updatedData.spotifyUniqueTrackArtistId;
+    spotifyUniqueQueryArtistId = updatedData.spotifyUniqueQueryArtistId;
+    spotifyUniqueAlbumId = updatedData.spotifyUniqueAlbumId;
+    // spotifyUniqueAlbumArtist = updatedData.spotifyUniqueAlbumArtist; This variable is not used anywhere right now.
+}
+
 function fetchSearchResults(query) {
     // Construct a unique cache key based on query and user login state
     // This ensures separate cache entries for logged-in and not-logged-in states
@@ -75,19 +88,32 @@ function fetchSearchResults(query) {
     if (cache[cacheKey]) {
         console.log('Using cached data for:', cacheKey);
         // Use the cached HTML to update the appropriate container
-        document.getElementById('searchResults').innerHTML = cache[cacheKey];
+        const cachedContent = cache[cacheKey];
+
+        // Update the cache with the new data
+        updateData(cachedContent.updatedData);
+        document.getElementById('searchResults').innerHTML = cachedContent.html;
         // Since we're using cached data, we don't push a new state here to avoid duplicating history entries
     } else {
         // Data not in cache, make the fetch request
         fetch(`/search?queryValue=${encodeURIComponent(query)}&ajax=true`)
-            .then(response => response.text()) // Expecting text (HTML) response
-            .then(html => {
+            .then(response => response.json()) // Expecting text (HTML) response
+            .then(data => {
                 console.log('Fetching and caching data for:', cacheKey);
+
+                // Update global JavaScript variables
+                updateData(data.updatedData);
+
                 // Insert the received HTML into the results section of the page
-                document.getElementById('searchResults').innerHTML = html;
+                document.getElementById('searchResults').innerHTML = data.html;
 
                 // Update the cache with the new data
-                cache[cacheKey] = html;
+                cache[cacheKey] = {
+                    html: data.html,
+                    updatedData: data.updatedData
+                };
+
+                console.log(cache[cacheKey]);
 
                 // Push a new state into the history
                 history.pushState({query: query}, "", `?queryValue=${encodeURIComponent(query)}`);

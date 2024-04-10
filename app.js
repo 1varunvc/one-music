@@ -48,7 +48,7 @@ const app = express();
 // 'urlencoded' helps access html data. Other data formats could JSON etc.
 // body-parser required as to exclusively define "extended: true" although this is no use to us.
 app.use(bodyParser.urlencoded({
-  extended: true
+    extended: true
 }));
 
 // This sets a static directory to look for source files like css, js, img. These file links are mentioned in html or ejs files.
@@ -59,15 +59,15 @@ app.use(express.static("public"));
 app.set('view engine', 'ejs');
 
 // Starting the server.
-app.listen(3000, function() {
-  console.log("Server is running on port 3000.")
+app.listen(3000, function () {
+    console.log("Server is running on port 3000.")
 })
 
 // Set-up Cookies
 app.use(cookieSession({
-  // maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days
-  maxAge: 60 * 60 * 1000, // 1 hour
-  keys: [keys.session.cookieKey]
+    // maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days
+    maxAge: 60 * 60 * 1000, // 1 hour
+    keys: [keys.session.cookieKey]
 }))
 
 // Initialize passport for cookieSession
@@ -79,10 +79,10 @@ app.use("/auth", authRoutes);
 
 // Connecting to monogoDb Atlas
 mongoose.connect(keys.mongoDb.dbURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 }, () => {
-  console.log("Connected to mongoDb Atlas.")
+    console.log("Connected to mongoDb Atlas.")
 })
 
 // Variables
@@ -121,144 +121,95 @@ let ytLiveUniqueAppJs = [];
 
 // The page to load when the browser (client) makes request to GET something from the server on "/", i.e., from the homepage.
 // This GET request is made as soon as the homepage url is entered in the address bar od browser, automatically.
-app.get("/", function(req, res) {
-  // res.sendFile(__dirname + "/index.html");
-  res.render("index", {
-    user: req.user
-  });
+app.get("/", function (req, res) {
+    // res.sendFile(__dirname + "/index.html");
+    res.render("index", {
+        user: req.user
+    });
 });
 
 // The data that server should GET when the GET request is sent by the client, upon entering the search queryValue, in the search bar (form).
-app.get("/search", async function(req, res) {
+app.get("/search", async function (req, res) {
 
-  // Accessing the queryValue user submitted in index.html.
-  const query = req.query.queryValue;
-  let results = await fetchYouTubeResults(query);
-  let isAjaxRequest = req.query.ajax === 'true'; // A simple way to signal an AJAX request
+    // Accessing the queryValue user submitted in index.html.
+    const query = req.query.queryValue;
+    let results = await fetchYouTubeResults(query);
+    let isAjaxRequest = req.query.ajax === 'true'; // A simple way to signal an AJAX request
 
-  let i = 0;
+    if (req.user) {
+        // User is logged in, fetch Spotify results
+        let spotifyResults = await fetchSpotifyResults(query, req.user.accessToken);
+        Object.assign(results, spotifyResults);
+    }
 
-  if (req.user) {
-    // User is logged in, fetch Spotify results
-    let spotifyResults = await fetchSpotifyResults(query, req.user.accessToken);
-    Object.assign(results, spotifyResults);
-  }
+    let view;
 
-  let view;
+    if (req.user && isAjaxRequest) {
+        view = "partialResultsLoggedIn";
+    } else if (isAjaxRequest) {
+        view = "partialResultsNotLoggedIn"
+    } else {
+        view = "results";
+    }
 
-  if (req.user) {
-    view = "partialResultsLoggedIn";
-  } else {
-    view = "partialResultsNotLoggedIn"
-  }
+    let options = {
+        layout: false, // Disable the Express layout
+        query: query,
+        user: !!req.user,
 
-  if (isAjaxRequest) {
-    // For AJAX requests, render the EJS template to a string
-    res.render(view, {
-      layout: false, // Assuming you're using an Express layout, this disables it
-      query: query,
-      user: !!req.user,
+        // If there is no key named 'id' in ytQueryAppJs, set its values as { id: [], thumb: [], title: [], channel: [] }.
+        ytQueryEjs: (results.ytQueryAppJs && 'id' in results.ytQueryAppJs) ? results.ytQueryAppJs : {
+            id: [],
+            thumb: [],
+            title: [],
+            channel: []
+        },
+        ytCoverUniqueEjs: (results.ytCoverUniqueAppJs && 'id' in results.ytCoverUniqueAppJs) ? results.ytCoverUniqueAppJs : {
+            id: [],
+            thumb: [],
+            title: [],
+            channel: []
+        },
+        ytLiveUniqueEjs: (results.ytLiveUniqueAppJs && 'id' in results.ytLiveUniqueAppJs) ? results.ytLiveUniqueAppJs : {
+            id: [],
+            thumb: [],
+            title: [],
+            channel: []
+        },
 
-      // If there is no key named 'id' in ytQueryAppJs, set its values as { id: [], thumb: [], title: [], channel: [] }.
-      ytQueryEjs: (results.ytQueryAppJs && 'id' in results.ytQueryAppJs) ? results.ytQueryAppJs : {
-        id: [],
-        thumb: [],
-        title: [],
-        channel: []
-      },
-      ytCoverUniqueEjs: (results.ytCoverUniqueAppJs && 'id' in results.ytCoverUniqueAppJs) ? results.ytCoverUniqueAppJs : {
-        id: [],
-        thumb: [],
-        title: [],
-        channel: []
-      },
-      ytLiveUniqueEjs: (results.ytLiveUniqueAppJs && 'id' in results.ytLiveUniqueAppJs) ? results.ytLiveUniqueAppJs : {
-        id: [],
-        thumb: [],
-        title: [],
-        channel: []
-      },
+        spotifyTrackId: results.spotifyTrackId,
+        spotifyTrackThumb: results.spotifyTrackThumb,
+        spotifyTrackTitle: results.spotifyTrackTitle,
+        spotifyTrackArtist: results.spotifyTrackArtist,
 
-      spotifyTrackId: results.spotifyTrackId,
-      spotifyTrackThumb: results.spotifyTrackThumb,
-      spotifyTrackTitle: results.spotifyTrackTitle,
-      spotifyTrackArtist: results.spotifyTrackArtist,
+        spotifyUniqueTrackArtistId: results.spotifyUniqueTrackArtistId,
+        spotifyUniqueTrackArtistThumb: results.spotifyUniqueTrackArtistThumb,
+        spotifyUniqueTrackArtistName: results.spotifyUniqueTrackArtistName,
 
-      spotifyUniqueTrackArtistId: results.spotifyUniqueTrackArtistId,
-      spotifyUniqueTrackArtistThumb: results.spotifyUniqueTrackArtistThumb,
-      spotifyUniqueTrackArtistName: results.spotifyUniqueTrackArtistName,
+        spotifyUniqueQueryArtistId: results.spotifyUniqueQueryArtistId,
+        spotifyUniqueQueryArtistThumb: results.spotifyUniqueQueryArtistThumb,
+        spotifyUniqueQueryArtistName: results.spotifyUniqueQueryArtistName,
 
-      spotifyUniqueQueryArtistId: results.spotifyUniqueQueryArtistId,
-      spotifyUniqueQueryArtistThumb: results.spotifyUniqueQueryArtistThumb,
-      spotifyUniqueQueryArtistName: results.spotifyUniqueQueryArtistName,
+        spotifyAlbumId: results.spotifyAlbumId,
+        spotifyAlbumThumb: results.spotifyAlbumThumb,
+        spotifyAlbumName: results.spotifyAlbumName,
+        // spotifyAlbumArtist: spotifyAlbumArtist,
 
-      spotifyAlbumId: results.spotifyAlbumId,
-      spotifyAlbumThumb: results.spotifyAlbumThumb,
-      spotifyAlbumName: results.spotifyAlbumName,
-      // spotifyAlbumArtist: spotifyAlbumArtist,
+        spotifyUniqueAlbumId: results.spotifyUniqueAlbumId,
+        spotifyUniqueAlbumThumb: results.spotifyUniqueAlbumThumb,
+        spotifyUniqueAlbumName: results.spotifyUniqueAlbumName,
+        spotifyUniqueAlbumArtist: results.spotifyUniqueAlbumArtist
+    }
 
-      spotifyUniqueAlbumId: results.spotifyUniqueAlbumId,
-      spotifyUniqueAlbumThumb: results.spotifyUniqueAlbumThumb,
-      spotifyUniqueAlbumName: results.spotifyUniqueAlbumName,
-      spotifyUniqueAlbumArtist: results.spotifyUniqueAlbumArtist
-    }, (err, html) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Error rendering results");
-        return;
-      }
-      res.send(html); // Send the rendered HTML as the response
+    res.render(view, options, (err, html) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Error rendering results");
+            return;
+        }
+
+        res.send(html);
     });
-  } else {
-    // Regular request, render the page for normal search results
-    res.render("results", {
-      query: query,
-      user: !!req.user,
-
-      // If there is no key named 'id' in ytQueryAppJs, set its values as { id: [], thumb: [], title: [], channel: [] }.
-      ytQueryEjs: (results.ytQueryAppJs && 'id' in results.ytQueryAppJs) ? results.ytQueryAppJs : {
-        id: [],
-        thumb: [],
-        title: [],
-        channel: []
-      },
-      ytCoverUniqueEjs: (results.ytCoverUniqueAppJs && 'id' in results.ytCoverUniqueAppJs) ? results.ytCoverUniqueAppJs : {
-        id: [],
-        thumb: [],
-        title: [],
-        channel: []
-      },
-      ytLiveUniqueEjs: (results.ytLiveUniqueAppJs && 'id' in results.ytLiveUniqueAppJs) ? results.ytLiveUniqueAppJs : {
-        id: [],
-        thumb: [],
-        title: [],
-        channel: []
-      },
-
-      spotifyTrackId: results.spotifyTrackId,
-      spotifyTrackThumb: results.spotifyTrackThumb,
-      spotifyTrackTitle: results.spotifyTrackTitle,
-      spotifyTrackArtist: results.spotifyTrackArtist,
-
-      spotifyUniqueTrackArtistId: results.spotifyUniqueTrackArtistId,
-      spotifyUniqueTrackArtistThumb: results.spotifyUniqueTrackArtistThumb,
-      spotifyUniqueTrackArtistName: results.spotifyUniqueTrackArtistName,
-
-      spotifyUniqueQueryArtistId: results.spotifyUniqueQueryArtistId,
-      spotifyUniqueQueryArtistThumb: results.spotifyUniqueQueryArtistThumb,
-      spotifyUniqueQueryArtistName: results.spotifyUniqueQueryArtistName,
-
-      spotifyAlbumId: results.spotifyAlbumId,
-      spotifyAlbumThumb: results.spotifyAlbumThumb,
-      spotifyAlbumName: results.spotifyAlbumName,
-      // spotifyAlbumArtist: spotifyAlbumArtist,
-
-      spotifyUniqueAlbumId: results.spotifyUniqueAlbumId,
-      spotifyUniqueAlbumThumb: results.spotifyUniqueAlbumThumb,
-      spotifyUniqueAlbumName: results.spotifyUniqueAlbumName,
-      spotifyUniqueAlbumArtist: results.spotifyUniqueAlbumArtist
-    })
-  }
 });
 
 /* Attempt to update access token, using refresh token. Everything works, apart from User.findOneAndUpdate({ });.
@@ -410,55 +361,55 @@ app.post("/", function(req, res) {
  });
 */
 
- /*  Methods for fetching Album Artists.
+/*  Methods for fetching Album Artists.
 
- // Method 1:
- // The following approach was causing the loading time to be increase by (API Call Time) x resAlbumArtistResult.data.artists).length. Which is terribly slow.
- await axios.get("https://api.spotify.com/v1/albums/artists?ids=" + spotifyUniqueAlbumId, {
-   headers: {
-     'Authorization': "Bearer " + req.user.accessToken,
-   }
- }).then((resAlbumArtistResult) => {
-   for (i = 0; i < (resAlbumArtistResult.data.artists).length; i++) {
-     // console.log(resTrackArtistResult);
-     spotifyUniqueAlbumArtist[i] = resAlbumArtistResult.data.artists[i].name;
-   }
- })
+// Method 1:
+// The following approach was causing the loading time to be increase by (API Call Time) x resAlbumArtistResult.data.artists).length. Which is terribly slow.
+await axios.get("https://api.spotify.com/v1/albums/artists?ids=" + spotifyUniqueAlbumId, {
+  headers: {
+    'Authorization': "Bearer " + req.user.accessToken,
+  }
+}).then((resAlbumArtistResult) => {
+  for (i = 0; i < (resAlbumArtistResult.data.artists).length; i++) {
+    // console.log(resTrackArtistResult);
+    spotifyUniqueAlbumArtist[i] = resAlbumArtistResult.data.artists[i].name;
+  }
+})
 
- // Method 2:
- // The following approach is now unnecessay.
- // Allocating values to unique album artists. Track-wise, then Query-wise, and then concatinating the two to spotifyUniqueAlbumArtist.
- for (i = 0; i < spotifyUniqueTrackAlbumArtist.length; i++) {
-   // console.log(spotifyUniqueAlbumId.length);
-   // console.log(i);
-   for (j = 0; j < 1; j++) {
-     // console.log("    " + j);
-     if (JSON.stringify(spotifyUniqueTrackAlbumArtist[i]).localeCompare(JSON.stringify(spotifyResult.tracks.items[j].album.id)) == 0) {
-       console.log("    Matched pairs: " + i + "    " + j);
-       console.log("    " + JSON.stringify(spotifyUniqueTrackAlbumArtist[i]));
-       console.log("    " + JSON.stringify(spotifyResult.albums.items[j].id));
-       spotifyUniqueAlbumArtist[i] = spotifyResult.tracks.items[j].album.artists[0].name;
-       console.log(spotifyUniqueAlbumArtist[i]);
-       break;
-     }
-   }
- }
+// Method 2:
+// The following approach is now unnecessay.
+// Allocating values to unique album artists. Track-wise, then Query-wise, and then concatinating the two to spotifyUniqueAlbumArtist.
+for (i = 0; i < spotifyUniqueTrackAlbumArtist.length; i++) {
+  // console.log(spotifyUniqueAlbumId.length);
+  // console.log(i);
+  for (j = 0; j < 1; j++) {
+    // console.log("    " + j);
+    if (JSON.stringify(spotifyUniqueTrackAlbumArtist[i]).localeCompare(JSON.stringify(spotifyResult.tracks.items[j].album.id)) == 0) {
+      console.log("    Matched pairs: " + i + "    " + j);
+      console.log("    " + JSON.stringify(spotifyUniqueTrackAlbumArtist[i]));
+      console.log("    " + JSON.stringify(spotifyResult.albums.items[j].id));
+      spotifyUniqueAlbumArtist[i] = spotifyResult.tracks.items[j].album.artists[0].name;
+      console.log(spotifyUniqueAlbumArtist[i]);
+      break;
+    }
+  }
+}
 
- for (i = spotifyUniqueTrackAlbumArtist.length; i < (spotifyUniqueTrackAlbumArtist.length + spotifyUniqueQueryAlbumArtist.length); i++) {
-   // console.log(spotifyUniqueAlbumId.length);
-   // console.log(i);
-   for (j = 0; j < 2; j++) {
-     // console.log("    " + j);
-     if (JSON.stringify(spotifyUniqueQueryAlbumArtist[i]).localeCompare(JSON.stringify(spotifyResult.albums.items[j].id)) == 0) {
-       console.log("    Matched pairs: " + i + "    " + j);
-       console.log("    " + JSON.stringify(spotifyUniqueQueryAlbumArtist[i]));
-       console.log("    " + JSON.stringify(spotifyResult.albums.items[j].id));
-       spotifyUniqueAlbumArtist[i] = spotifyResult.albums.items[j].artists[0].name;
-       console.log(spotifyUniqueAlbumArtist[i]);
-       break;
-     }
-   }
- }
+for (i = spotifyUniqueTrackAlbumArtist.length; i < (spotifyUniqueTrackAlbumArtist.length + spotifyUniqueQueryAlbumArtist.length); i++) {
+  // console.log(spotifyUniqueAlbumId.length);
+  // console.log(i);
+  for (j = 0; j < 2; j++) {
+    // console.log("    " + j);
+    if (JSON.stringify(spotifyUniqueQueryAlbumArtist[i]).localeCompare(JSON.stringify(spotifyResult.albums.items[j].id)) == 0) {
+      console.log("    Matched pairs: " + i + "    " + j);
+      console.log("    " + JSON.stringify(spotifyUniqueQueryAlbumArtist[i]));
+      console.log("    " + JSON.stringify(spotifyResult.albums.items[j].id));
+      spotifyUniqueAlbumArtist[i] = spotifyResult.albums.items[j].artists[0].name;
+      console.log(spotifyUniqueAlbumArtist[i]);
+      break;
+    }
+  }
+}
 */
 
 /* Since we are now declaring the variables locally. We need not to empty every array.

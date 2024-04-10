@@ -1,6 +1,5 @@
 let i = 0;
 $(document).ready(function () {
-
     // Change  the background when hovering over the search results.
     $('.item').hover(function () {
         $(this).animate({'backgroundColor': '#171717'}, 100);
@@ -9,7 +8,7 @@ $(document).ready(function () {
     });
 
     // Recognise clicks on the search results (even the ones returned with the AJAX call) and display the content in the nowPlayingContainer.
-    $('.contentContainer').on('click', '[id^=ytQueryEjs], [id^=ytCoverUniqueEjs], [id^=ytLiveUniqueEjs], [id^=spotifyTrackId], [id^=spotifyUniqueTrackArtistId], [id^=spotifyUniqueQueryArtistId], [id^=spotifyUniqueAlbumId]', function (event) {
+    $('.contentContainer').on('click', '[id^=ytQueryEjs], [id^=ytCoverUniqueEjs], [id^=ytLiveUniqueEjs], [id^=spotifyTrackId], [id^=spotifyUniqueTrackArtistId], [id^=spotifyUniqueQueryArtistId], [id^=spotifyUniqueAlbumId]', function () {
         const id = $(this).attr('id');
         const baseId = id.match(/^[a-zA-Z]+/g)[0]; // Extracts the base ID
         const index = parseInt(id.replace(/^\D+/g, ''), 10); // Removes non-digits at the start and parses the rest as integer
@@ -33,6 +32,8 @@ $(document).ready(function () {
             else if (baseId === 'spotifyUniqueTrackArtistId') contentUrl = `${spotifyBaseURL}/artist/${spotifyUniqueTrackArtistId[index]}`;
             else if (baseId === 'spotifyUniqueQueryArtistId') contentUrl = `${spotifyBaseURL}/artist/${spotifyUniqueQueryArtistId[index]}`;
             else if (baseId === 'spotifyUniqueAlbumId') contentUrl = `${spotifyBaseURL}/album/${spotifyUniqueAlbumId[index]}`;
+            // The following line needs to be fixed.
+            // else if (baseId === 'spotifyUniqueAlbumId') contentUrl = `${spotifyBaseURL}/artist/${spotifyUniqueAlbumArtist[index]}`;
         }
 
         // Update the nowPlayingContainer with the content
@@ -63,14 +64,43 @@ document.querySelector('.searchForm').addEventListener('submit', function (e) {
     fetchSearchResults(query);
 });
 
+var cache = {};
+
 function fetchSearchResults(query) {
-    // Note the addition of '&ajax=true' to signal an AJAX request
-    fetch(`/search?queryValue=${encodeURIComponent(query)}&ajax=true`)
-        .then(response => response.text()) // Expecting text (HTML) response
-        .then(html => {
-            // Insert the received HTML into the results section of the page
-            document.getElementById('searchResults').innerHTML = html;
-            history.pushState({query: query}, "", `?queryValue=${encodeURIComponent(query)}`);
-        })
-        .catch(error => console.error('Error:', error));
+    // Construct a unique cache key based on query and user login state
+    // This ensures separate cache entries for logged-in and not-logged-in states
+    const cacheKey = `${query}-${user ? 'loggedIn' : 'notLoggedIn'}`;
+
+    // Check if the data for this query and user state is cached
+    if (cache[cacheKey]) {
+        console.log('Using cached data for:', cacheKey);
+        // Use the cached HTML to update the appropriate container
+        document.getElementById('searchResults').innerHTML = cache[cacheKey];
+        // Since we're using cached data, we don't push a new state here to avoid duplicating history entries
+    } else {
+        // Data not in cache, make the fetch request
+        fetch(`/search?queryValue=${encodeURIComponent(query)}&ajax=true`)
+            .then(response => response.text()) // Expecting text (HTML) response
+            .then(html => {
+                console.log('Fetching and caching data for:', cacheKey);
+                // Insert the received HTML into the results section of the page
+                document.getElementById('searchResults').innerHTML = html;
+
+                // Update the cache with the new data
+                cache[cacheKey] = html;
+
+                // Push a new state into the history
+                history.pushState({query: query}, "", `?queryValue=${encodeURIComponent(query)}`);
+            })
+            .catch(error => console.error('Error:', error));
+    }
 }
+
+// Listen for popstate event to handle back/forward navigation
+window.addEventListener('popstate', function (event) {
+    if (event.state && event.state.query) {
+        // Use the cached data to update UI, fetching if necessary
+        fetchSearchResults(event.state.query);
+    }
+});
+

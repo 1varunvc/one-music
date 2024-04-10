@@ -68,12 +68,8 @@ function fetchSearchResults(query) {
     fetch(`/search?queryValue=${encodeURIComponent(query)}&ajax=true`)
         .then(response => response.text()) // Expecting text (HTML) response
         .then(html => {
-            // Insert the received HTML into the results section of your page
-            if (user) {
-                document.getElementById('searchResultsLoggedIn').innerHTML = html;
-            } else {
-                document.getElementById('searchResultsNotLoggedIn').innerHTML = html;
-            }
+            // Insert the received HTML into the results section of the page
+            document.getElementById('searchResults').innerHTML = html;
             history.pushState({query: query}, "", `?queryValue=${encodeURIComponent(query)}`);
         })
         .catch(error => console.error('Error:', error));

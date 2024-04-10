@@ -1,5 +1,14 @@
 let i = 0;
 $(document).ready(function () {
+
+    // Change  the background when hovering over the search results.
+    $('.item').hover(function () {
+        $(this).animate({'backgroundColor': '#171717'}, 100);
+    }, function () {
+        $(this).animate({'backgroundColor': 'black'}, 200);
+    });
+
+    // Recognise clicks on the search results (even the ones returned with the AJAX call) and display the content in the nowPlayingContainer.
     $('.contentContainer').on('click', '[id^=ytQueryEjs], [id^=ytCoverUniqueEjs], [id^=ytLiveUniqueEjs], [id^=spotifyTrackId], [id^=spotifyUniqueTrackArtistId], [id^=spotifyUniqueQueryArtistId], [id^=spotifyUniqueAlbumId]', function (event) {
         const id = $(this).attr('id');
         const baseId = id.match(/^[a-zA-Z]+/g)[0]; // Extracts the base ID

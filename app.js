@@ -128,29 +128,31 @@ app.get("/", function (req, res) {
     });
 });
 
+const cache = {};  // Simple in-memory cache
+
 // The data that server should GET when the GET request is sent by the client, upon entering the search queryValue, in the search bar (form).
 app.get("/search", async function (req, res) {
-
-    // Accessing the queryValue user submitted in index.html.
     const query = req.query.queryValue;
+    const userStatus = req.user ? 'loggedIn' : 'notLoggedIn'; // Distinguish only by login status
+    const cacheKey = `search-${query}-${userStatus}`;  // Example: 'search-beethoven-loggedIn'
+    const isAjax = isAjaxRequest(req);
+
+    // Check server cache first
+    if (cache[cacheKey]) {
+        console.log('Serving from server cache:', cacheKey);
+        const cachedResults = cache[cacheKey];
+        res.send(cachedResults);
+        return;
+    }
+
     let results = await fetchYouTubeResults(query);
-    let isAjaxRequest = req.query.ajax === 'true'; // A simple way to signal an AJAX request
 
     if (req.user) {
-        // User is logged in, fetch Spotify results
         let spotifyResults = await fetchSpotifyResults(query, req.user.accessToken);
         Object.assign(results, spotifyResults);
     }
 
-    let view;
-
-    if (req.user && isAjaxRequest) {
-        view = "partialResultsLoggedIn";
-    } else if (isAjaxRequest) {
-        view = "partialResultsNotLoggedIn"
-    } else {
-        view = "results";
-    }
+    let view = isAjax ? (req.user ? "partialResultsLoggedIn" : "partialResultsNotLoggedIn") : "results";
 
     let options = {
         layout: false, // Disable the Express layout
@@ -204,11 +206,13 @@ app.get("/search", async function (req, res) {
     res.render(view, options, (err, html) => {
         if (err) {
             console.error(err);
-            res.status(500).send("Error rendering results");
-            return;
+            return res.status(500).send("Error rendering results");
         }
 
-        if (view !== "results") {
+        // Cache the rendered HTML and JSON for AJAX requests
+        cache[cacheKey] = isAjax ? { html: html, updatedData: options } : html;
+
+        if (isAjax) {
             res.json({
                 html: html,
                 updatedData: options
@@ -218,6 +222,11 @@ app.get("/search", async function (req, res) {
         }
     });
 });
+
+function isAjaxRequest(req) {
+    return req.query.ajax === 'true' || req.headers['x-requested-with'] === 'XMLHttpRequest';
+}
+
 
 /* Attempt to update access token, using refresh token. Everything works, apart from User.findOneAndUpdate({ });.
 

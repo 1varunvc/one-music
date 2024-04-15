@@ -58,6 +58,8 @@ $(document).ready(function () {
     });
 });
 
+/*
+// Listen for form submission and prevent the default form submission
 document.querySelector('.searchForm').addEventListener('submit', function (e) {
     e.preventDefault(); // Prevent traditional form submission
     const query = document.getElementById('queryId').value;
@@ -93,7 +95,7 @@ function fetchSearchResults(query) {
         // Update the cache with the new data
         updateData(cachedContent.updatedData);
         document.getElementById('searchResults').innerHTML = cachedContent.html;
-        // Since we're using cached data, we don't push a new state here to avoid duplicating history entries
+        history.replaceState({ query: query }, "", `?queryValue=${encodeURIComponent(query)}`);
     } else {
         // Data not in cache, make the fetch request
         fetch(`/search?queryValue=${encodeURIComponent(query)}&ajax=true`)
@@ -127,6 +129,8 @@ window.addEventListener('popstate', function (event) {
     if (event.state && event.state.query) {
         // Use the cached data to update UI, fetching if necessary
         fetchSearchResults(event.state.query);
+        console.log("Popstate event triggered.")
     }
 });
 
+ */

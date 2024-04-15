@@ -18,10 +18,10 @@
 
     <a href="/"><img class="logo" src="./img/logo/one_music-short-4.0.svg" alt="One Music"></a>
 
-    <!-- POST request to fetch data related to queryValue.  -->
+    <!-- GET request to fetch data related to queryValue.  -->
     <form class="searchForm" action="/search" method="get">
         <div class="searchInputContainer">
-            <input class="searchInput" id="queryId" type="search" name="queryValue" placeholder="Search"
+            <input class="searchInput isAjax" id="queryId" type="search" name="queryValue" placeholder="Search"
                    autocomplete="off" value="<%= query %>" required>
             <button class="searchButton" type="submit">
                 &#5125;&#xFE0E;
@@ -264,6 +264,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="./js/results.js"></script>
+<script src="./js/common.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/jquery.color-animation/1/mainfile"></script> -->
 
 </body>

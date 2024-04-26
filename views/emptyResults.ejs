@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>One Music</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400&family=Roboto:wght@300;400;500;700;900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="./styles/results.css">
+    <link rel="icon" href="img/logo/one_music-short-4.0.svg" type="image/svg+xml">
+</head>
+
+<body onload>
+
+<section class="bodyContainer">
+
+    <a href="/"><img class="logo" src="./img/logo/one_music-short-4.0.svg" alt="One Music"></a>
+
+    <!-- GET request to fetch data related to queryValue.  -->
+    <form class="searchForm" action="/search" method="get">
+        <div class="searchInputContainer">
+            <input class="searchInput isAjax" id="queryId" type="search" name="queryValue" placeholder="Search"
+                   autocomplete="off" value="<%= query %>" required>
+            <button class="searchButton" type="submit">
+                &#5125;&#xFE0E;
+            </button>
+        </div>
+    </form>
+
+    <!-- Based upon whether the user exists, following if-else statement proceeds. -->
+    <% if (!isLoggedIn) { %>
+
+        <section class="contentContainer">
+
+            <a class="loginPrompt" href="auth/spotify"><em>Login with Spotify for better results.</em></a>
+
+            <div class="nowPlayingContainer"></div>
+
+            <section id="searchResults">
+
+            </section>
+
+        </section>
+
+    <% } %>
+
+    <% if(isLoggedIn) { %>
+
+        <section class="contentContainer">
+
+            <div class="nowPlayingContainer"></div>
+
+            <section id="searchResults">
+
+            </section>
+
+        </section>
+
+    <% } %>
+
+    <section class="footer">
+
+        <% if (isLoggedIn) { %>
+            <a class="logout" href="auth/logout">Logout</a>
+        <% } %>
+
+        <hr>
+
+        <div class="downloads">
+            <!-- <img class="pwa" src="./img/app_store/pwa.png" alt="pwa_badge" /> -->
+            <img class="googlePlay" src="./img/app_store/google_play.png" alt="google_play_badge"/>
+            <img class="appStore" src="./img/app_store/app_store.svg" alt="app_store_badge"/>
+        </div>
+
+    </section>
+
+</section>
+
+<script>
+    let isLoggedIn = <%- JSON.stringify(isLoggedIn) %>;
+    let ytQueryEjs;
+    let ytCoverUniqueEjs;
+    let ytLiveUniqueEjs;
+    let spotifyTrackId;
+    let spotifyUniqueTrackArtistId;
+    let spotifyUniqueQueryArtistId;
+    let spotifyUniqueAlbumId;
+    let spotifyUniqueAlbumArtist; // This variable is useless right now. It needs to be fixed.
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="./js/results.js"></script>
+<script src="./js/common.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/jquery.color-animation/1/mainfile"></script> -->
+
+</body>
+
+</html>

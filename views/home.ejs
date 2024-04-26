@@ -28,7 +28,7 @@
       </div>
     </form>
 
-    <% if(user) { %>
+    <% if(isLoggedIn) { %>
       </section>
 
       <a class="logout" href="auth/logout">Logout</a>
@@ -52,7 +52,7 @@
     </section>
 
   <script>
-    let user = <%- JSON.stringify(user) %>;
+    let isLoggedIn = <%- JSON.stringify(isLoggedIn) %>;
   </script>
 
   <script src="./js/common.js"></script>

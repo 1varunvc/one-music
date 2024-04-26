@@ -123,8 +123,8 @@ let ytLiveUniqueAppJs = [];
 // This GET request is made as soon as the homepage url is entered in the address bar od browser, automatically.
 app.get("/", function (req, res) {
     // res.sendFile(__dirname + "/index.html");
-    res.render("index", {
-        user: req.user
+    res.render("home", {
+        isLoggedIn: !!req.user
     });
 });
 
@@ -132,10 +132,29 @@ const cache = {};  // Simple in-memory cache
 
 // The data that server should GET when the GET request is sent by the client, upon entering the search queryValue, in the search bar (form).
 app.get("/search", async function (req, res) {
+    let isLoggedIn = !!req.user;
     const query = req.query.queryValue;
-    const userStatus = req.user ? 'loggedIn' : 'notLoggedIn'; // Distinguish only by login status
+    const userStatus = isLoggedIn ? 'loggedIn' : 'notLoggedIn'; // Distinguish only by login status
     const cacheKey = `search-${query}-${userStatus}`;  // Example: 'search-beethoven-loggedIn'
-    const isAjax = isAjaxRequest(req);
+    const isAjax = req.query.ajax === 'true' || req.headers['x-requested-with'] === 'XMLHttpRequest';
+
+    // If the search query is empty, render the emptyResults.ejs file.
+    if (req.query.source === "home") {
+        return res.render("emptyResults", {
+            layout: false,
+            query: query,
+            isLoggedIn: isLoggedIn
+        }, (err, html) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send("Error rendering results");
+            }
+
+            console.log("2");
+            console.log(html);
+            res.send (html);
+        });
+    }
 
     // Check server cache first
     if (cache[cacheKey]) {
@@ -154,10 +173,9 @@ app.get("/search", async function (req, res) {
 
     let view = isAjax ? (req.user ? "partialResultsLoggedIn" : "partialResultsNotLoggedIn") : "results";
 
-    let options = {
-        layout: false, // Disable the Express layout
+    let data = {
         query: query,
-        user: !!req.user,
+        isLoggedIn: isLoggedIn,
 
         // If there is no key named 'id' in ytQueryAppJs, set its values as { id: [], thumb: [], title: [], channel: [] }.
         ytQueryEjs: (results.ytQueryAppJs && 'id' in results.ytQueryAppJs) ? results.ytQueryAppJs : {
@@ -203,19 +221,22 @@ app.get("/search", async function (req, res) {
         spotifyUniqueAlbumArtist: results.spotifyUniqueAlbumArtist
     }
 
-    res.render(view, options, (err, html) => {
+    res.render(view, {
+        layout: false,
+        data: data
+    }, (err, html) => {
         if (err) {
             console.error(err);
             return res.status(500).send("Error rendering results");
         }
 
         // Cache the rendered HTML and JSON for AJAX requests
-        cache[cacheKey] = isAjax ? { html: html, updatedData: options } : html;
+        cache[cacheKey] = isAjax ? { html: html, updatedData: data } : html;
 
         if (isAjax) {
             res.json({
                 html: html,
-                updatedData: options
+                updatedData: data
             });
         } else {
             res.send(html);

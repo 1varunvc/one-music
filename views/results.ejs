@@ -30,7 +30,7 @@
     </form>
 
     <!-- Based upon whether the user exists, following if-else statement proceeds. -->
-    <% if (!user) { %>
+    <% if (!isLoggedIn) { %>
 
         <section class="contentContainer">
 
@@ -82,158 +82,161 @@
 
     <% } %>
 
-    <% if(user) { %>
+    <% if(isLoggedIn) { %>
 
-    <section class="contentContainer">
+        <section class="contentContainer">
 
-        <div class="nowPlayingContainer"></div>
+            <div class="nowPlayingContainer"></div>
 
-        <section id="searchResults">
+            <section id="searchResults">
 
-            <!-- Essentially, our aim is to have the source for iframes as per the data fetched using API calls.-->
+                <!-- Essentially, our aim is to have the source for iframes as per the data fetched using API calls.-->
 
-            <% if((spotifyTrackId.length + spotifyUniqueAlbumId.length + spotifyUniqueTrackArtistId.length) > 3 && spotifyTrackId != null && spotifyUniqueAlbumId != null && spotifyUniqueTrackArtistId != null ) { %>
+                <% if((spotifyTrackId.length + spotifyUniqueAlbumId.length + spotifyUniqueTrackArtistId.length) > 3 && spotifyTrackId != null && spotifyUniqueAlbumId != null && spotifyUniqueTrackArtistId != null ) { %>
 
-                <h3 class="itemHeading">Listen</h3>
+                    <h3 class="itemHeading">Listen</h3>
 
-                <!-- Track 00, Album 00_00, Artist 00_00, 00_01 (if exists, else hidden), Track 01, 02, 03  -->
-                <% let i = 0 %>
+                    <!-- Track 00, Album 00_00, Artist 00_00, 00_01 (if exists, else hidden), Track 01, 02, 03  -->
+                    <% let i = 0 %>
 
-                <!-- 0 Track 00 -->
-                <div id="spotifyTrackId0" class="item itemSpotify">
-                    <img class="itemThumb" src="<%= spotifyTrackThumb[0] %>" width="" height="" alt="">
-                    <div class="itemInfo">
-                        <p class="itemTitle"><%= spotifyTrackTitle[0] %><br></p>
-                        <p class="itemChannel">Song <span
-                                    style="font-size: ;">&#8226;</span> <%= spotifyTrackArtist[0] %>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- 0 Track 00 Album 00 -->
-                <div id="spotifyUniqueAlbumId<%= i %>" class="item itemSpotify">
-                    <img class="itemThumb" src="<%= spotifyUniqueAlbumThumb[0] %>" width="" height="" alt="">
-                    <div class="itemInfo">
-                        <p class="itemTitle"><%= spotifyUniqueAlbumName[0] %><br></p>
-                        <p class="itemChannel">Album <span
-                                    style="font-size: ;">&#8226;</span> <%= spotifyUniqueAlbumArtist[0] %></p>
-                    </div>
-                </div>
-
-                <!-- 0 Track 00 Artist 00-->
-                <div id="spotifyUniqueTrackArtistId<%= i %>" class="item itemSpotify itemArtist">
-                    <img class="itemThumb itemThumbArtist" src="<%= spotifyUniqueTrackArtistThumb[0] %>" width="46"
-                         height="" alt="">
-                    <div class="itemInfo">
-                        <p class="itemTitle"><%= spotifyUniqueTrackArtistName[0] %><br></p>
-                        <p class="itemChannel">Artist</p>
-                    </div>
-                </div>
-
-                <!-- Track 01, 02, 03 -->
-                <% for(i = 1; i < spotifyTrackId.length; i++) { %>
-                    <div id="spotifyTrackId<%= i %>" class="item itemSpotify">
-                        <img class="itemThumb" src="<%= spotifyTrackThumb[i] %>" width="" height="" alt="">
+                    <!-- 0 Track 00 -->
+                    <div id="spotifyTrackId0" class="item itemSpotify">
+                        <img class="itemThumb" src="<%= spotifyTrackThumb[0] %>" width="" height="" alt="">
                         <div class="itemInfo">
-                            <p class="itemTitle"><%= spotifyTrackTitle[i] %><br></p>
+                            <p class="itemTitle"><%= spotifyTrackTitle[0] %><br></p>
                             <p class="itemChannel">Song <span
-                                        style="font-size: ;">&#8226;</span> <%= spotifyTrackArtist[i] %></p>
+                                        style="font-size: ;">&#8226;</span> <%= spotifyTrackArtist[0] %>
+                            </p>
                         </div>
                     </div>
-                <% } %>
 
-            <% } %>
-
-            <h3 class="itemHeading">Watch</h3>
-            <% for(i = 0; i < Object.keys(ytQueryEjs.id).length; i++) { %>
-                <div id="ytQueryEjs<%= i %>" class="item">
-                    <img class="itemThumb itemThumbVideo" src="<%= ytQueryEjs.thumb[i] %>" width="" height="" alt="">
-                    <div class="itemInfo">
-                        <p class="itemTitle"><%= ytQueryEjs.title[i] %><br></p>
-                        <p class="itemChannel"><%= ytQueryEjs.channel[i] %></p>
-                    </div>
-                </div>
-            <% } %>
-
-            <h3 class="itemHeading">Cover</h3>
-            <% for(i = 0; i < Object.keys(ytCoverUniqueEjs.id).length; i++) { %>
-                <div id="ytCoverUniqueEjs<%= i %>" class="item">
-                    <img class="itemThumb itemThumbVideo" src="<%= ytCoverUniqueEjs.thumb[i] %>" width="" height=""
-                         alt="">
-                    <div class="itemInfo">
-                        <p class="itemTitle"><%= ytCoverUniqueEjs.title[i] %><br></p>
-                        <p class="itemChannel"><%= ytCoverUniqueEjs.channel[i] %></p>
-                    </div>
-                </div>
-            <% } %>
-
-            <!-- We are putting greater than '2' in the following 'if', because both the Artist ID arrays contains atleast one element, even if its value is null. -->
-            <% if (((spotifyUniqueTrackArtistId.length) + (spotifyUniqueQueryArtistId.length)) > 2 && spotifyUniqueTrackArtistId != null && spotifyUniqueQueryArtistId != null) { %>
-                <h3 class="itemHeading">Artists</h3>
-
-                <!-- Showcasing all the next artists of Track 00 (if exists), all artists of Track 01 and Track 02.  -->
-                <% for(i = 1; i < spotifyUniqueTrackArtistId.length; i++) { %>
-                    <div id="spotifyUniqueTrackArtistId<%= i %>" class="item itemSpotify itemArtist">
-                        <img class="itemThumb itemThumbArtist" src="<%= spotifyUniqueTrackArtistThumb[i] %>" width="46"
-                             height="" alt="">
-                        <div class="itemInfo">
-                            <p class="itemTitle"><%= spotifyUniqueTrackArtistName[i] %><br></p>
-                            <p class="itemChannel">Artist</p>
-                        </div>
-                    </div>
-                <% } %>
-
-                <!-- Showcasing 4 artists that match queryValue. -->
-                <% for(i = 0; i < spotifyUniqueQueryArtistId.length; i++) { %>
-                    <div id="spotifyUniqueQueryArtistId<%= i %>" class="item itemSpotify itemArtist">
-                        <img class="itemThumb itemThumbArtist" src="<%= spotifyUniqueQueryArtistThumb[i] %>" width="46"
-                             height="" alt="">
-                        <div class="itemInfo">
-                            <p class="itemTitle"><%= spotifyUniqueQueryArtistName[i] %><br></p>
-                            <p class="itemChannel">Artist</p>
-                        </div>
-                    </div>
-                <% } %>
-            <% } %>
-
-            <h3 class="itemHeading">Live</h3>
-            <% for(i = 0; i < Object.keys(ytLiveUniqueEjs.id).length; i++) { %>
-                <div id="ytLiveUniqueEjs<%= i %>" class="item">
-                    <img class="itemThumb itemThumbVideo" src="<%= ytLiveUniqueEjs.thumb[i] %>" width="" height=""
-                         alt="">
-                    <div class="itemInfo">
-                        <p class="itemTitle"><%= ytLiveUniqueEjs.title[i] %><br></p>
-                        <p class="itemChannel"><%= ytLiveUniqueEjs.channel[i] %></p>
-                    </div>
-                </div>
-            <% } %>
-
-            <% if(spotifyUniqueAlbumId.length > 0 && spotifyUniqueAlbumId != null) { %>
-
-                <h3 class="itemHeading">Albums</h3>
-
-                <% for (i = 1; i < spotifyUniqueAlbumId.length; i++) { %>
+                    <!-- 0 Track 00 Album 00 -->
                     <div id="spotifyUniqueAlbumId<%= i %>" class="item itemSpotify">
-                        <img class="itemThumb" src="<%= spotifyUniqueAlbumThumb[i] %>" width="" height="" alt="">
+                        <img class="itemThumb" src="<%= spotifyUniqueAlbumThumb[0] %>" width="" height="" alt="">
                         <div class="itemInfo">
-                            <p class="itemTitle"><%= spotifyUniqueAlbumName[i] %><br></p>
+                            <p class="itemTitle"><%= spotifyUniqueAlbumName[0] %><br></p>
                             <p class="itemChannel">Album <span
-                                        style="font-size: ;">&#8226;</span> <%= spotifyUniqueAlbumArtist[i] %></p>
+                                        style="font-size: ;">&#8226;</span> <%= spotifyUniqueAlbumArtist[0] %></p>
+                        </div>
+                    </div>
+
+                    <!-- 0 Track 00 Artist 00-->
+                    <div id="spotifyUniqueTrackArtistId<%= i %>" class="item itemSpotify itemArtist">
+                        <img class="itemThumb itemThumbArtist" src="<%= spotifyUniqueTrackArtistThumb[0] %>" width="46"
+                             height="" alt="">
+                        <div class="itemInfo">
+                            <p class="itemTitle"><%= spotifyUniqueTrackArtistName[0] %><br></p>
+                            <p class="itemChannel">Artist</p>
+                        </div>
+                    </div>
+
+                    <!-- Track 01, 02, 03 -->
+                    <% for(i = 1; i < spotifyTrackId.length; i++) { %>
+                        <div id="spotifyTrackId<%= i %>" class="item itemSpotify">
+                            <img class="itemThumb" src="<%= spotifyTrackThumb[i] %>" width="" height="" alt="">
+                            <div class="itemInfo">
+                                <p class="itemTitle"><%= spotifyTrackTitle[i] %><br></p>
+                                <p class="itemChannel">Song <span
+                                            style="font-size: ;">&#8226;</span> <%= spotifyTrackArtist[i] %></p>
+                            </div>
+                        </div>
+                    <% } %>
+
+                <% } %>
+
+                <h3 class="itemHeading">Watch</h3>
+                <% for(i = 0; i < Object.keys(ytQueryEjs.id).length; i++) { %>
+                    <div id="ytQueryEjs<%= i %>" class="item">
+                        <img class="itemThumb itemThumbVideo" src="<%= ytQueryEjs.thumb[i] %>" width="" height=""
+                             alt="">
+                        <div class="itemInfo">
+                            <p class="itemTitle"><%= ytQueryEjs.title[i] %><br></p>
+                            <p class="itemChannel"><%= ytQueryEjs.channel[i] %></p>
                         </div>
                     </div>
                 <% } %>
 
-            <% } %>
+                <h3 class="itemHeading">Cover</h3>
+                <% for(i = 0; i < Object.keys(ytCoverUniqueEjs.id).length; i++) { %>
+                    <div id="ytCoverUniqueEjs<%= i %>" class="item">
+                        <img class="itemThumb itemThumbVideo" src="<%= ytCoverUniqueEjs.thumb[i] %>" width="" height=""
+                             alt="">
+                        <div class="itemInfo">
+                            <p class="itemTitle"><%= ytCoverUniqueEjs.title[i] %><br></p>
+                            <p class="itemChannel"><%= ytCoverUniqueEjs.channel[i] %></p>
+                        </div>
+                    </div>
+                <% } %>
 
-            <% } %>
+                <!-- We are putting greater than '2' in the following 'if', because both the Artist ID arrays contains atleast one element, even if its value is null. -->
+                <% if (((spotifyUniqueTrackArtistId.length) + (spotifyUniqueQueryArtistId.length)) > 2 && spotifyUniqueTrackArtistId != null && spotifyUniqueQueryArtistId != null) { %>
+                    <h3 class="itemHeading">Artists</h3>
+
+                    <!-- Showcasing all the next artists of Track 00 (if exists), all artists of Track 01 and Track 02.  -->
+                    <% for(i = 1; i < spotifyUniqueTrackArtistId.length; i++) { %>
+                        <div id="spotifyUniqueTrackArtistId<%= i %>" class="item itemSpotify itemArtist">
+                            <img class="itemThumb itemThumbArtist" src="<%= spotifyUniqueTrackArtistThumb[i] %>"
+                                 width="46"
+                                 height="" alt="">
+                            <div class="itemInfo">
+                                <p class="itemTitle"><%= spotifyUniqueTrackArtistName[i] %><br></p>
+                                <p class="itemChannel">Artist</p>
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <!-- Showcasing 4 artists that match queryValue. -->
+                    <% for(i = 0; i < spotifyUniqueQueryArtistId.length; i++) { %>
+                        <div id="spotifyUniqueQueryArtistId<%= i %>" class="item itemSpotify itemArtist">
+                            <img class="itemThumb itemThumbArtist" src="<%= spotifyUniqueQueryArtistThumb[i] %>"
+                                 width="46"
+                                 height="" alt="">
+                            <div class="itemInfo">
+                                <p class="itemTitle"><%= spotifyUniqueQueryArtistName[i] %><br></p>
+                                <p class="itemChannel">Artist</p>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+
+                <h3 class="itemHeading">Live</h3>
+                <% for(i = 0; i < Object.keys(ytLiveUniqueEjs.id).length; i++) { %>
+                    <div id="ytLiveUniqueEjs<%= i %>" class="item">
+                        <img class="itemThumb itemThumbVideo" src="<%= ytLiveUniqueEjs.thumb[i] %>" width="" height=""
+                             alt="">
+                        <div class="itemInfo">
+                            <p class="itemTitle"><%= ytLiveUniqueEjs.title[i] %><br></p>
+                            <p class="itemChannel"><%= ytLiveUniqueEjs.channel[i] %></p>
+                        </div>
+                    </div>
+                <% } %>
+
+                <% if(spotifyUniqueAlbumId.length > 0 && spotifyUniqueAlbumId != null) { %>
+
+                    <h3 class="itemHeading">Albums</h3>
+
+                    <% for (i = 1; i < spotifyUniqueAlbumId.length; i++) { %>
+                        <div id="spotifyUniqueAlbumId<%= i %>" class="item itemSpotify">
+                            <img class="itemThumb" src="<%= spotifyUniqueAlbumThumb[i] %>" width="" height="" alt="">
+                            <div class="itemInfo">
+                                <p class="itemTitle"><%= spotifyUniqueAlbumName[i] %><br></p>
+                                <p class="itemChannel">Album <span
+                                            style="font-size: ;">&#8226;</span> <%= spotifyUniqueAlbumArtist[i] %></p>
+                            </div>
+                        </div>
+                    <% } %>
+
+                <% } %>
+
+            </section>
 
         </section>
 
-    </section>
+    <% } %>
 
     <section class="footer">
 
-        <% if (user) { %>
+        <% if (isLoggedIn) { %>
             <a class="logout" href="auth/logout">Logout</a>
         <% } %>
 
@@ -250,7 +253,7 @@
 </section>
 
 <script>
-    let user = <%- JSON.stringify(user) %>;
+    let isLoggedIn = <%- JSON.stringify(isLoggedIn) %>;
     let ytQueryEjs = <%- JSON.stringify(ytQueryEjs) %>;
     let ytCoverUniqueEjs = <%- JSON.stringify(ytCoverUniqueEjs) %>;
     let ytLiveUniqueEjs = <%- JSON.stringify(ytLiveUniqueEjs) %>;
